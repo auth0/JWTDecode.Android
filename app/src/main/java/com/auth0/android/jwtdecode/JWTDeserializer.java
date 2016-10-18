@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JWTDeserializer implements JsonDeserializer<JWTPayload> {
+class JWTDeserializer implements JsonDeserializer<JWTPayload> {
     @Override
     public JWTPayload deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (json.isJsonNull() || !json.isJsonObject()) {
@@ -33,7 +33,7 @@ public class JWTDeserializer implements JsonDeserializer<JWTPayload> {
 
         //Private Claims
         Map<String, Claim> extra = new HashMap<>();
-        for(Map.Entry<String, JsonElement> e: object.entrySet()){
+        for (Map.Entry<String, JsonElement> e : object.entrySet()) {
             extra.put(e.getKey(), new Claim(e.getValue()));
         }
 

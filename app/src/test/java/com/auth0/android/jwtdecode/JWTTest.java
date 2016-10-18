@@ -2,10 +2,11 @@ package com.auth0.android.jwtdecode;
 
 import android.util.Base64;
 
-import org.hamcrest.collection.IsArrayWithSize;
-import org.hamcrest.collection.IsEmptyCollection;
-import org.junit.Before;
+import com.auth0.android.jwtdecode.exceptions.JWTException;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -22,7 +23,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
 import static org.hamcrest.collection.IsArrayWithSize.arrayWithSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 @RunWith(RobolectricTestRunner.class)
@@ -31,9 +31,39 @@ public class JWTTest {
 
     private static final String CHARSET_UTF_8 = "UTF-8";
 
-    @Before
-    public void setUp() throws Exception {
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    // Exceptions
+    @Test
+    public void shouldThrowIfLessThan3Parts() throws Exception {
+        exception.expect(JWTException.class);
+        exception.expectMessage("The token was expected to have 3 parts, but got 2.");
+        new JWT("two.parts");
     }
+
+    @Test
+    public void shouldThrowIfMoreThan3Parts() throws Exception {
+        exception.expect(JWTException.class);
+        exception.expectMessage("The token was expected to have 3 parts, but got 4.");
+        new JWT("this.has.four.parts");
+    }
+
+    @Test
+    public void shouldThrowIfItsNotBase64Encoded() throws Exception {
+        exception.expect(JWTException.class);
+        exception.expectMessage("Received bytes didn't correspond to a valid Base64 encoded string.");
+        new JWT("thisIsNot.Base64_Enc.oded");
+    }
+
+    @Test
+    public void shouldThrowIfPayloadHasInvalidJSONFormat() throws Exception {
+        exception.expect(JWTException.class);
+        exception.expectMessage("The token's payload had an invalid JSON format.");
+        new JWT("eyJhbGciOiJIUzI1NiJ9.e30ijfe923.XmNK3GpH3Ys_7lyQ");
+    }
+
+    // Parts
 
     @Test
     public void shouldGetHeader() throws Exception {
@@ -132,101 +162,11 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetNullIntegerIfClaimClassMismatch() throws Exception {
+    public void shouldGetClaim() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifX0.lrU1gZlOdlmTTeZwq0VI-pZx2iV46UWYd5-lCjy6-c4");
         assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("object").asInt(), is(nullValue()));
-    }
-
-    @Test
-    public void shouldGetNullDoubleIfClaimClassMismatch() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifX0.lrU1gZlOdlmTTeZwq0VI-pZx2iV46UWYd5-lCjy6-c4");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("object").asDouble(), is(nullValue()));
-    }
-
-    @Test
-    public void shouldGetNullStringIfClaimClassMismatch() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifX0.lrU1gZlOdlmTTeZwq0VI-pZx2iV46UWYd5-lCjy6-c4");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("object").asString(), is(nullValue()));
-    }
-
-    @Test
-    public void shouldGetNullDateIfClaimClassMismatch() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifX0.lrU1gZlOdlmTTeZwq0VI-pZx2iV46UWYd5-lCjy6-c4");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("object").asString(), is(nullValue()));
-    }
-
-    @Test
-    public void getDateClaim() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJtaWxsaXMiOjE0NzY4MTU2NDF9.i6gXnaIMC31aCeKy4CYt8X72VwyBBNuAfCEtqthYkOA");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("millis").asDate(), is(new Date(1476815641L * 1000)));
-    }
-
-    @Test
-    public void shouldGetDoubleClaim() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJwZXJjZW50IjoyMy41Nn0.KjBMiUGXy73Hz68DuCtqoju459sVZdH0RupHlEe1-Wc");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("percent").asDouble(), is(23.56));
-    }
-
-    @Test
-    public void shouldGetArrayOfCustomClassClaim() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJ1c2VycyI6W3sibmFtZSI6Ikdlb3JnZSIsImlkIjoxfSx7Im5hbWUiOiJNYXJrIiwiaWQiOjJ9XX0.CLzNVzzyi3eTC8RAoyOgFWnC1rEXEPE0TazAwOsowGE");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("users").asArray(UserPojo.class), is(arrayContaining(new UserPojo("George", 1), new UserPojo("Mark", 2))));
-    }
-
-    @Test
-    public void shouldGetArrayOfPrimitiveClaim() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJ0ZXh0IjpbInNvbWUiLCJ3b3JkcyJdfQ.5BCCZYrzdIwp1I6PFC46OXMf6TgbASuPRTTrBN-JkBM");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("text").asArray(String.class), is(arrayContaining("some", "words")));
-    }
-
-    @Test
-    public void shouldGetNullArrayIfClaimIsNotArray() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.LlTGHPZRXbci-y349jXXN0byQniQQqwKGybzQCFIgY0");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("name").asArray(Integer.class), is(IsArrayWithSize.<Integer>emptyArray()));
-    }
-
-    @Test
-    public void shouldGetEmptyArrayIfClaimClassMismatch() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.LlTGHPZRXbci-y349jXXN0byQniQQqwKGybzQCFIgY0");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("name").asArray(Integer.class), is(IsArrayWithSize.<Integer>emptyArray()));
-    }
-
-    @Test
-    public void shouldGetListOfCustomClassClaim() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJ1c2VycyI6W3sibmFtZSI6Ikdlb3JnZSIsImlkIjoxfSx7Im5hbWUiOiJNYXJrIiwiaWQiOjJ9XX0.CLzNVzzyi3eTC8RAoyOgFWnC1rEXEPE0TazAwOsowGE");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("users").asList(UserPojo.class), is(hasItems(new UserPojo("George", 1), new UserPojo("Mark", 2))));
-    }
-
-    @Test
-    public void shouldGetListOfPrimitiveClaim() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJ0ZXh0IjpbInNvbWUiLCJ3b3JkcyJdfQ.5BCCZYrzdIwp1I6PFC46OXMf6TgbASuPRTTrBN-JkBM");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("text").asList(String.class), is(hasItems("some", "words")));
-    }
-
-    @Test
-    public void shouldGetNullListIfClaimIsNotArray() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.LlTGHPZRXbci-y349jXXN0byQniQQqwKGybzQCFIgY0");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("name").asList(Integer.class), is(IsEmptyCollection.emptyCollectionOf(Integer.class)));
-    }
-
-    @Test
-    public void shouldGetEmptyListIfClaimClassMismatch() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.LlTGHPZRXbci-y349jXXN0byQniQQqwKGybzQCFIgY0");
-        assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("name").asList(Integer.class), is(IsEmptyCollection.emptyCollectionOf(Integer.class)));
+        assertThat(jwt.getClaim("object"), is(notNullValue()));
+        assertThat(jwt.getClaim("object"), is(instanceOf(Claim.class)));
     }
 
     //Helper Methods

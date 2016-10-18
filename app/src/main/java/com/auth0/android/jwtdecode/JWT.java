@@ -107,7 +107,7 @@ public class JWT {
         } catch (IllegalArgumentException e) {
             throw new JWTException("Received bytes didn't correspond to a valid Base64 encoded string.", e);
         } catch (UnsupportedEncodingException e) {
-            throw new JWTException("Received bytes weren't UTF-8 encoded.", e);
+            throw new JWTException("Device doesn't support UTF-8 charset encoding.", e);
         }
         return decoded;
     }
