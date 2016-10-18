@@ -4,21 +4,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.auth0.android.jwtdecode.exceptions.InvalidJsonException;
 import com.auth0.android.jwtdecode.exceptions.JWTException;
-import com.auth0.android.jwtdecode.exceptions.MalformedJWTException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.Map;
 
 public class JWT {
 
     private static final String TAG = JWT.class.getSimpleName();
     private static final String ENCODING_UTF_8 = "UTF-8";
 
-    private String header;
+    private Map<String, String> header;
     private JWTPayload payload;
     private String signature;
 
@@ -27,7 +28,7 @@ public class JWT {
     }
 
     @Nullable
-    public String getHeader() {
+    public Map<String, String> getHeader() {
         return header;
     }
 
@@ -71,21 +72,28 @@ public class JWT {
         return payload.jti;
     }
 
+    @Nullable
+    public Claim getClaim(@NonNull String name) {
+        return payload.extra.get(name);
+    }
+
+
     // =====================================
     // ===========Private Methods===========
     // =====================================
 
     private void decode(String token) {
         final String[] parts = splitToken(token);
-        header = base64Decode(parts[0]);
-        payload = parsePayload(base64Decode(parts[1]));
+        Type mapType = new TypeToken<Map<String, String>>() {}.getType();
+        header = parseJson(base64Decode(parts[0]), mapType);
+        payload = parseJson(base64Decode(parts[1]), JWTPayload.class);
         signature = parts[2];
     }
 
     private String[] splitToken(String token) {
         String[] parts = token.split("\\.");
         if (parts.length != 3) {
-            throw new MalformedJWTException(String.format("The token was expected to have 3 parts, but got %s.", parts.length));
+            throw new JWTException(String.format("The token was expected to have 3 parts, but got %s.", parts.length));
         }
         return parts;
     }
@@ -104,16 +112,15 @@ public class JWT {
         return decoded;
     }
 
-    private JWTPayload parsePayload(String json) {
+    private <T> T parseJson(String json, Type typeOfT) {
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(JWTPayload.class, new JwtDeserializer())
+                .registerTypeAdapter(JWTPayload.class, new JWTDeserializer())
                 .create();
-
-        JWTPayload payload;
+        T payload;
         try {
-            payload = gson.fromJson(json, JWTPayload.class);
+            payload = gson.fromJson(json, typeOfT);
         } catch (Exception e) {
-            throw new InvalidJsonException("The token's payload had an invalid JSON format.", e);
+            throw new JWTException("The token's payload had an invalid JSON format.", e);
         }
         return payload;
     }

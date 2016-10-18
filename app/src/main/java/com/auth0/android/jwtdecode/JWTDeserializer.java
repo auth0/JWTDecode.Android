@@ -32,10 +32,9 @@ public class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         String[] aud = removeStringOrArray(object, "aud");
 
         //Private Claims
-        Map<String, JsonElement> extra = new HashMap<>();
-        for (Map.Entry e : object.entrySet()) {
-            String name = String.valueOf(e.getKey());
-            extra.put(name, object.get(name));
+        Map<String, Claim> extra = new HashMap<>();
+        for(Map.Entry<String, JsonElement> e: object.entrySet()){
+            extra.put(e.getKey(), new Claim(e.getValue()));
         }
 
         return new JWTPayload(iss, sub, exp, nbf, iat, jti, aud, extra);
