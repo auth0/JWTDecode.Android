@@ -77,6 +77,13 @@ public class JWT {
         return payload.extra.get(name);
     }
 
+    public boolean isExpired() {
+        final Date today = new Date();
+        boolean issuedInTheFuture = payload.iat != null && payload.iat.after(today);
+        boolean expired = payload.exp != null && payload.exp.before(today);
+        return issuedInTheFuture || expired;
+    }
+
 
     // =====================================
     // ===========Private Methods===========
@@ -84,7 +91,8 @@ public class JWT {
 
     private void decode(String token) {
         final String[] parts = splitToken(token);
-        Type mapType = new TypeToken<Map<String, String>>() {}.getType();
+        Type mapType = new TypeToken<Map<String, String>>() {
+        }.getType();
         header = parseJson(base64Decode(parts[0]), mapType);
         payload = parseJson(base64Decode(parts[1]), JWTPayload.class);
         signature = parts[2];

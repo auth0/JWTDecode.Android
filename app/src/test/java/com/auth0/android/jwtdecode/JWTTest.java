@@ -1,5 +1,6 @@
 package com.auth0.android.jwtdecode;
 
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.auth0.android.jwtdecode.exceptions.JWTException;
@@ -24,6 +25,8 @@ import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
 import static org.hamcrest.collection.IsArrayWithSize.arrayWithSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
@@ -152,6 +155,43 @@ public class JWTTest {
         assertThat(jwt.getId(), is("1234567890"));
     }
 
+    @Test
+    public void shouldBeExpired() throws Exception {
+        long pastSeconds = System.currentTimeMillis() / 1000;
+        long futureSeconds = (System.currentTimeMillis() + 10000) / 1000;
+
+        JWT issuedAndExpiresInTheFuture = customTimeJWT(futureSeconds, futureSeconds);
+        assertTrue(issuedAndExpiresInTheFuture.isExpired());
+        JWT issuedInTheFuture = customTimeJWT(futureSeconds, null);
+        assertTrue(issuedInTheFuture.isExpired());
+
+        JWT issuedAndExpiresInThePast = customTimeJWT(pastSeconds, pastSeconds);
+        assertTrue(issuedAndExpiresInThePast.isExpired());
+        JWT expiresInThePast = customTimeJWT(null, pastSeconds);
+        assertTrue(expiresInThePast.isExpired());
+
+        JWT issuedInTheFutureExpiresInThePast = customTimeJWT(futureSeconds, pastSeconds);
+        assertTrue(issuedInTheFutureExpiresInThePast.isExpired());
+    }
+
+    @Test
+    public void shouldNotBeExpired() throws Exception {
+        long pastSeconds = System.currentTimeMillis() / 1000;
+        long futureSeconds = (System.currentTimeMillis() + 10000) / 1000;
+
+        JWT missingDates = customTimeJWT(null, null);
+        assertFalse(missingDates.isExpired());
+
+        JWT issuedInThePastExpiresInTheFuture = customTimeJWT(pastSeconds, futureSeconds);
+        assertFalse(issuedInThePastExpiresInTheFuture.isExpired());
+
+        JWT issuedInThePast = customTimeJWT(pastSeconds, null);
+        assertFalse(issuedInThePast.isExpired());
+
+        JWT expiresInTheFuture = customTimeJWT(null, futureSeconds);
+        assertFalse(expiresInTheFuture.isExpired());
+    }
+
     //Private Claims
 
     @Test
@@ -171,10 +211,22 @@ public class JWTTest {
 
     //Helper Methods
 
-    private String generateToken(String jsonHeader, String jsonBody, String signature) {
-        String header = encodeString(jsonHeader);
-        String body = encodeString(jsonBody);
-        return String.format("%s.%s.%s", header, body, signature);
+    private JWT customTimeJWT(@Nullable Long iat, @Nullable Long exp) {
+        String header = encodeString("{}");
+        StringBuilder bodyBuilder = new StringBuilder("{");
+        if (iat != null) {
+            bodyBuilder.append("\"iat\":\"").append(iat.longValue()).append("\"");
+        }
+        if (exp != null) {
+            if (iat != null) {
+                bodyBuilder.append(",");
+            }
+            bodyBuilder.append("\"exp\":\"").append(exp.longValue()).append("\"");
+        }
+        bodyBuilder.append("}");
+        String body = encodeString(bodyBuilder.toString());
+        String signature = "sign";
+        return new JWT(String.format("%s.%s.%s", header, body, signature));
     }
 
     private String encodeString(String source) {
