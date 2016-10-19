@@ -18,6 +18,12 @@ String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiw
 JWT jwt = new JWT(token);
 ```
 
+A `JWTException` will raise with a detailed message if the token has:
+* An invalid part count.
+* A part not encoded as Base64 + UTF-8.
+* A Header or Payload without a valid JSON format.
+
+
 ### Registered Claims
 
 #### Issuer ("iss")
@@ -88,14 +94,20 @@ Claim claim = jwt.getClaim("isAdmin");
 ### Claim Class
 The Claim class is a wrapper for the Claim values. It allows you to get the Claim as different class types. The available helpers are:
 
-* **asBoolean**: Returns the Boolean value or null if it can't be converted.
-* **asInt**: Returns the Integer value or null if it can't be converted.
-* **asDouble**: Returns the Double value or null if it can't be converted.
-* **asString**: Returns the String value or null if it can't be converted.
-* **asDate**: Returns the Date value or null if it can't be converted. Note that the [JWT Standard](https://tools.ietf.org/html/rfc7519#section-2) specified that all the *NumericDate* values must be in seconds.
-* **asArray**: Returns the value parsed as an Array, or an empty Array if it can't be converted.
-* **asList**: Returns the value parsed as a List, or an empty List if it can't be converted.
+#### Primitives
+* **asBoolean()**: Returns the Boolean value or null if it can't be converted.
+* **asInt()**: Returns the Integer value or null if it can't be converted.
+* **asDouble()**: Returns the Double value or null if it can't be converted.
+* **asString()**: Returns the String value or null if it can't be converted.
+* **asDate()**: Returns the Date value or null if it can't be converted. Note that the [JWT Standard](https://tools.ietf.org/html/rfc7519#section-2) specified that all the *NumericDate* values must be in seconds.
 
+#### Collections
+To obtain a Claim as a Collection you'll need to provide the **Class Type** of the contents to convert from.
+
+* **asArray(class)**: Returns the value parsed as an Array of elements of type **Class Type**, or an empty Array if the value isn't an JSON Array.
+* **asList(class)**: Returns the value parsed as a List of elements of type **Class Type**, or an empty List if the value isn't an JSON Array.
+
+If the values inside the JSON Array can't be converted to the given **Class Type**, a `JsonSyntaxException` will raise.
 
 ## What is Auth0?
 
