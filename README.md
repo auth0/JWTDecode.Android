@@ -92,7 +92,7 @@ The Claim class is a wrapper for the Claim values. It allows you to get the Clai
 * **asInt**: Returns the Integer value or null if it can't be converted.
 * **asDouble**: Returns the Double value or null if it can't be converted.
 * **asString**: Returns the String value or null if it can't be converted.
-* **asDate**: Returns the Date value or null if it can't be converted.
+* **asDate**: Returns the Date value or null if it can't be converted. Note that the [JWT Standard](https://tools.ietf.org/html/rfc7519#section-2) specified that all the *NumericDate* values must be in seconds.
 * **asArray**: Returns the value parsed as an Array, or an empty Array if it can't be converted.
 * **asList**: Returns the value parsed as a List, or an empty List if it can't be converted.
 
