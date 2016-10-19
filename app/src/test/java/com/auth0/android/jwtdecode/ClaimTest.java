@@ -2,11 +2,14 @@ package com.auth0.android.jwtdecode;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 
 import org.hamcrest.collection.IsArrayWithSize;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -27,6 +30,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ClaimTest {
 
     Gson gson;
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -139,6 +144,15 @@ public class ClaimTest {
     }
 
     @Test
+    public void shouldThrowIfArrayClassMismatch() throws Exception {
+        JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
+        Claim claim = new Claim(value);
+
+        exception.expect(JsonSyntaxException.class);
+        claim.asArray(UserPojo.class);
+    }
+
+    @Test
     public void shouldGetListValueOfCustomClass() throws Exception {
         JsonElement value = gson.toJsonTree(Arrays.asList(new UserPojo("George", 1), new UserPojo("Mark", 2)));
         Claim claim = new Claim(value);
@@ -172,5 +186,14 @@ public class ClaimTest {
 
         assertThat(claim.asList(String.class), is(notNullValue()));
         assertThat(claim.asList(String.class), is(IsEmptyCollection.emptyCollectionOf(String.class)));
+    }
+
+    @Test
+    public void shouldThrowIfListClassMismatch() throws Exception {
+        JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
+        Claim claim = new Claim(value);
+
+        exception.expect(JsonSyntaxException.class);
+        claim.asList(UserPojo.class);
     }
 }

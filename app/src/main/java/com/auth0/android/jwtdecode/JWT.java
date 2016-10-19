@@ -14,6 +14,9 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Wrapper class for values contained inside a Json Web Token (JWT).
+ */
 public class JWT {
 
     private static final String TAG = JWT.class.getSimpleName();
@@ -23,60 +26,121 @@ public class JWT {
     private JWTPayload payload;
     private String signature;
 
+    /**
+     * Decode a given string JWT token.
+     *
+     * @param token the string JWT token.
+     */
     public JWT(@NonNull String token) {
         decode(token);
     }
 
-    @Nullable
+    /**
+     * Get the Header values from this JWT as a Map of Strings.
+     *
+     * @return the Header values of the JWT.
+     */
+    @NonNull
     public Map<String, String> getHeader() {
         return header;
     }
 
-    @Nullable
+    /**
+     * Get the Signature from this JWT as a Base64 encoded String.
+     *
+     * @return the Signature of the JWT.
+     */
+    @NonNull
     public String getSignature() {
         return signature;
     }
 
+    /**
+     * Get the value of the "iss" claim, or null if it's not available.
+     *
+     * @return the Issuer value or null.
+     */
     @Nullable
     public String getIssuer() {
         return payload.iss;
     }
 
+    /**
+     * Get the value of the "sub" claim, or null if it's not available.
+     *
+     * @return the Subject value or null.
+     */
     @Nullable
     public String getSubject() {
         return payload.sub;
     }
 
+    /**
+     * Get the value of the "aud" claim, or null if it's not available.
+     *
+     * @return the Audience value or null.
+     */
     @Nullable
     public String[] getAudience() {
         return payload.aud;
     }
 
+    /**
+     * Get the value of the "exp" claim, or null if it's not available.
+     *
+     * @return the Expiration Time value or null.
+     */
     @Nullable
     public Date getExpiresAt() {
         return payload.exp;
     }
 
+    /**
+     * Get the value of the "nbf" claim, or null if it's not available.
+     *
+     * @return the Not Before value or null.
+     */
     @Nullable
     public Date getNotBefore() {
         return payload.nbf;
     }
 
+    /**
+     * Get the value of the "iat" claim, or null if it's not available.
+     *
+     * @return the Issued At value or null.
+     */
     @Nullable
     public Date getIssuedAt() {
         return payload.iat;
     }
 
+    /**
+     * Get the value of the "jti" claim, or null if it's not available.
+     *
+     * @return the JWT ID value or null.
+     */
     @Nullable
     public String getId() {
         return payload.jti;
     }
 
+    /**
+     * Get a Private Claim given it's name. If the Claim wasn't specified in the JWT payload, null will be returned.
+     *
+     * @param name the name of the Claim to retrieve.
+     * @return the Claim if found or null.
+     */
     @Nullable
     public Claim getClaim(@NonNull String name) {
         return payload.extra.get(name);
     }
 
+    /**
+     * Validates that this JWT was issued in the past and hasn't expired yet.
+     *
+     * @return if this JWT has already expired or not.
+     */
     public boolean isExpired() {
         final Date today = new Date();
         boolean issuedInTheFuture = payload.iat != null && payload.iat.after(today);

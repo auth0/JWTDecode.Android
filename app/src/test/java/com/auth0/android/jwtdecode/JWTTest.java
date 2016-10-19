@@ -116,7 +116,7 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetExpiresAt() throws Exception {
+    public void shouldGetExpirationTime() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJleHAiOiIxNDc2NzI3MDg2In0.XwZztHlQwnAgmnQvrcWXJloLOUaLZGiY0HOXJCKRaks");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getExpiresAt(), is(instanceOf(Date.class)));
