@@ -25,6 +25,21 @@ public class Claim {
         this.value = value;
     }
 
+
+    /**
+     * Get this Claim as a Boolean.
+     * If the value isn't of type Boolean or it can't be converted to a Boolean, null will be returned.
+     *
+     * @return the value as a Boolean or null.
+     */
+    @Nullable
+    public Boolean asBoolean() {
+        if (!value.isJsonPrimitive()) {
+            return null;
+        }
+        return value.getAsBoolean();
+    }
+
     /**
      * Get this Claim as an Integer.
      * If the value isn't of type Integer or it can't be converted to an Integer, null will be returned.

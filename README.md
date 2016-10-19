@@ -88,6 +88,7 @@ Claim claim = jwt.getClaim("isAdmin");
 ### Claim Class
 The Claim class is a wrapper for the Claim values. It allows you to get the Claim as different class types. The available helpers are:
 
+* **asBoolean**: Returns the Boolean value or null if it can't be converted.
 * **asInt**: Returns the Integer value or null if it can't be converted.
 * **asDouble**: Returns the Double value or null if it can't be converted.
 * **asString**: Returns the String value or null if it can't be converted.

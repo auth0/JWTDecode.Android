@@ -40,6 +40,23 @@ public class ClaimTest {
     }
 
     @Test
+    public void shouldGetBooleanValue() throws Exception {
+        JsonElement value = gson.toJsonTree(true);
+        Claim claim = new Claim(value);
+
+        assertThat(claim.asBoolean(), is(notNullValue()));
+        assertThat(claim.asBoolean(), is(true));
+    }
+
+    @Test
+    public void shouldGetNullBooleanIfNotPrimitiveValue() throws Exception {
+        JsonElement value = gson.toJsonTree(new Object());
+        Claim claim = new Claim(value);
+
+        assertThat(claim.asBoolean(), is(nullValue()));
+    }
+
+    @Test
     public void shouldGetIntValue() throws Exception {
         JsonElement value = gson.toJsonTree(123);
         Claim claim = new Claim(value);
