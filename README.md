@@ -82,8 +82,15 @@ Returns the JWT ID value or null if it's not defined.
 String id = jwt.getId();
 ```
 
+#### Time Validation
 
-#### Private Claims
+The JWT token may include DateNumber fields that can be used to validate that the token was issued in a past date `"iat" < TODAY` and that the expiration date is in the future `"exp" > TODAY`. This library includes a method that checks both of this fields and returns the validity of the token. If any of the fields is missing they wont be considered.
+
+```java
+boolean isExpired = jwt.isExpired();
+```
+
+### Private Claims
 
 Additional Claims defined in the token can be obtained by calling `getClaim` and passing the Claim name. If the claim can't be found, null will be returned.
 
