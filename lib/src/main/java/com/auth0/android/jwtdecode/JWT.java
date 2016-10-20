@@ -21,6 +21,7 @@ public class JWT {
 
     private static final String TAG = JWT.class.getSimpleName();
     private static final String ENCODING_UTF_8 = "UTF-8";
+    private final String token;
 
     private Map<String, String> header;
     private JWTPayload payload;
@@ -33,6 +34,7 @@ public class JWT {
      */
     public JWT(@NonNull String token) {
         decode(token);
+        this.token = token;
     }
 
     /**
@@ -195,5 +197,15 @@ public class JWT {
             throw new JWTException("The token's payload had an invalid JSON format.", e);
         }
         return payload;
+    }
+
+    /**
+     * Returns the String representation of this JWT.
+     *
+     * @return the String Token.
+     */
+    @Override
+    public String toString() {
+        return token;
     }
 }

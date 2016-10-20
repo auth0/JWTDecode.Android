@@ -66,6 +66,15 @@ public class JWTTest {
         new JWT("eyJhbGciOiJIUzI1NiJ9.e30ijfe923.XmNK3GpH3Ys_7lyQ");
     }
 
+    // toString
+    @Test
+    public void shouldGetStringToken() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ");
+        assertThat(jwt, is(notNullValue()));
+        assertThat(jwt.toString(), is(notNullValue()));
+        assertThat(jwt.toString(), is("eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ"));
+    }
+
     // Parts
 
     @Test
