@@ -116,6 +116,39 @@ To obtain a Claim as a Collection you'll need to provide the **Class Type** of t
 
 If the values inside the JSON Array can't be converted to the given **Class Type**, a `JsonSyntaxException` will raise.
 
+### Sharing the instance
+
+#### Parcel
+
+The `JWT` class implements **Parcelable** so you can send it inside a `Bundle` on any Android intent. i.e. using Android Activities:
+
+```java
+// In the first Activity
+JWT jwt = new JWT("header.payload.signature");
+
+Intent intent = new Intent(ProfileActivity.class, MainActivity.this);
+intent.putExtra("jwt", jwt);
+startActivity(intent);
+
+// Then in another Activity
+JWT jwt = (JWT) getIntent().getParcelableExtra("jwt");
+```
+
+#### toString
+
+You can also call at any time `jwt.toString()` to get the String representation of the token that has given instance to this JWT. This is useful for instance if you need to validate some claims when you get a response, and then send the token back in the request header.
+
+```java
+JWT jwt = new JWT(res.getHeader("Authorization"));
+if (!jwt.isExpired() && "auth0".equals(jwt.getIssuer())){
+    req.putHeader("Authorization", "Bearer " + jwt);
+    return;
+} else {
+    // Get a fresh token
+}
+```
+
+
 ## What is Auth0?
 
 Auth0 helps you to:

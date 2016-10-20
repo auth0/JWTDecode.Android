@@ -1,5 +1,7 @@
 package com.auth0.android.jwtdecode;
 
+import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
@@ -17,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -217,6 +220,30 @@ public class JWTTest {
         assertThat(jwt.getClaim("object"), is(notNullValue()));
         assertThat(jwt.getClaim("object"), is(instanceOf(Claim.class)));
     }
+
+    //Parcelable
+
+    @Test
+    public void shouldBeParceled() throws Exception {
+        JWT jwtOrigin = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.K17vlwhE8FCMShdl1_65jEYqsQqBOVMPUU9IgG-QlTM");
+        assertThat(jwtOrigin, is(notNullValue()));
+
+        Bundle bundleOrigin = new Bundle();
+        bundleOrigin.putParcelable("jwt", jwtOrigin);
+        Parcel parcel = Parcel.obtain();
+        bundleOrigin.writeToParcel(parcel, 0);
+
+        //Extract bundle from parcel
+        parcel.setDataPosition(0);
+        Bundle bundleDest = parcel.readBundle(JWT.class.getClassLoader());
+        JWT jwtDest = bundleDest.getParcelable("jwt");
+
+        assertThat(jwtDest, is(notNullValue()));
+        assertThat(bundleOrigin, is(not(bundleDest)));
+        assertThat(jwtOrigin, is(not(jwtDest)));
+        assertThat(jwtOrigin.toString(), is(jwtDest.toString()));
+    }
+
 
     //Helper Methods
 
