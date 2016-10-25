@@ -1,6 +1,6 @@
-package com.auth0.android.jwtdecode;
+package com.auth0.android.jwt;
 
-import com.auth0.android.jwtdecode.exceptions.JWTException;
+import com.auth0.android.jwt.exceptions.JWTException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

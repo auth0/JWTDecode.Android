@@ -1,11 +1,11 @@
-package com.auth0.android.jwtdecode;
+package com.auth0.android.jwt;
 
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.auth0.android.jwtdecode.exceptions.JWTException;
+import com.auth0.android.jwt.exceptions.JWTException;
 
 import org.junit.Rule;
 import org.junit.Test;

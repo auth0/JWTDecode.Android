@@ -1,4 +1,4 @@
-package com.auth0.android.jwtdecode;
+package com.auth0.android.jwt;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.auth0.android.jwtdecode.exceptions.JWTException;
+import com.auth0.android.jwt.exceptions.JWTException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  * Wrapper class for values contained inside a Json Web Token (JWT).
  */
+@SuppressWarnings("ALL")
 public class JWT implements Parcelable {
 
     private static final String TAG = JWT.class.getSimpleName();
@@ -33,6 +34,7 @@ public class JWT implements Parcelable {
      * Decode a given string JWT token.
      *
      * @param token the string JWT token.
+     * @throws JWTException if the token cannot be decoded
      */
     public JWT(@NonNull String token) {
         decode(token);
@@ -152,6 +154,37 @@ public class JWT implements Parcelable {
         return issuedInTheFuture || expired;
     }
 
+    /**
+     * Returns the String representation of this JWT.
+     *
+     * @return the String Token.
+     */
+    @Override
+    public String toString() {
+        return token;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(token);
+    }
+
+    public static final Creator<JWT> CREATOR = new Creator<JWT>() {
+        @Override
+        public JWT createFromParcel(Parcel in) {
+            return new JWT(in.readString());
+        }
+
+        @Override
+        public JWT[] newArray(int size) {
+            return new JWT[size];
+        }
+    };
 
     // =====================================
     // ===========Private Methods===========
@@ -200,36 +233,4 @@ public class JWT implements Parcelable {
         }
         return payload;
     }
-
-    /**
-     * Returns the String representation of this JWT.
-     *
-     * @return the String Token.
-     */
-    @Override
-    public String toString() {
-        return token;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(token);
-    }
-
-    public static final Creator<JWT> CREATOR = new Creator<JWT>() {
-        @Override
-        public JWT createFromParcel(Parcel in) {
-            return new JWT(in.readString());
-        }
-
-        @Override
-        public JWT[] newArray(int size) {
-            return new JWT[size];
-        }
-    };
 }

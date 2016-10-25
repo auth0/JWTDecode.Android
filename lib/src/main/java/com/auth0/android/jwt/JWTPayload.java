@@ -1,4 +1,4 @@
-package com.auth0.android.jwtdecode;
+package com.auth0.android.jwt;
 
 import java.util.Date;
 import java.util.Map;

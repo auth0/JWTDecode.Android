@@ -1,4 +1,4 @@
-package com.auth0.android.jwtdecode.exceptions;
+package com.auth0.android.jwt.exceptions;
 
 public class JWTException extends RuntimeException {
 

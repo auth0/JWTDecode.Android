@@ -1,4 +1,4 @@
-package com.auth0.android.jwtdecode;
+package com.auth0.android.jwt;
 
 public class UserPojo {
     String name;
