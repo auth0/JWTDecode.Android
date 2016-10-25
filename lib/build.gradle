@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+def semver = defineVersion()
+version = semver.stringVersion
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
@@ -26,3 +29,49 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.1.2'
     testCompile 'org.mockito:mockito-core:2.2.5'
 }
+
+def defineVersion() {
+    def current = describeGit(false)
+    def snapshot = current == null
+    if (snapshot) {
+        current = describeGit(snapshot, "0.0.1")
+    }
+    return new Semver(snapshot: snapshot, version: current)
+}
+
+def describeGit(boolean snapshot, String defaultValue = null) {
+    def arguments = ['describe', '--tags']
+    arguments.add(snapshot ? '--abbrev=0' : '--exact-match')
+    def stdout = new ByteArrayOutputStream()
+    def string = defaultValue
+    try {
+        def result = project.exec {
+            executable = 'git'
+            args = arguments
+            standardOutput = stdout
+        }
+
+        result.assertNormalExitValue()
+
+        if (stdout.toByteArray().length > 0) {
+            string = stdout.toString().replace("\n", "")
+        }
+    } catch (Exception e) {
+        logger.debug("Failed git describe command", e)
+    } finally {
+        stdout.close()
+    }
+    return string
+}
+
+class Semver {
+    def version
+    def snapshot
+
+    def getStringVersion() {
+        return snapshot ? version + "-SNAPSHOT" : version
+    }
+}
+
+apply from: '../scripts/maven.gradle'
+apply from: '../scripts/bintray.gradle'

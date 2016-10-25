@@ -1,0 +1,64 @@
+apply plugin: 'com.github.dcendents.android-maven'
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                artifactId 'jwtdecode'
+
+                name 'JWT-Decode'
+                description 'A library to help you decode JWTs for Android'
+                url 'https://github.com/auth0/JWTDecode.Android'
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'https://raw.githubusercontent.com/auth0/jwtdecode.android/master/LICENSE'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'hzalaz'
+                        name 'Hernan Zalazar'
+                        email 'hernan@auth0.com'
+                    }
+                }
+                scm {
+                    connection 'scm:git@github.com:auth0/jwtdecode.Android.git'
+                    developerConnection 'scm:git@github.com:auth0/jwtdecode.android.git'
+                    url 'https://github.com/auth0/jwtdecode.android'
+
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+    failOnError false
+}
+
+afterEvaluate {
+    javadoc.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}

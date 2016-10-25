@@ -3,7 +3,7 @@
 Java library with focus on Android that provides Json Web Token (JWT) decoding.
 
 ## Install
-The library *will* be available both in Maven Central and JCenter. To start using it add this line to your `build.gradle` dependencies file:
+The library is be available both in Maven Central and JCenter. To start using it add this line to your `build.gradle` dependencies file:
 
 ```groovy
 compile 'com.auth0.android:jwtdecode:1.0.0'
@@ -18,7 +18,7 @@ String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiw
 JWT jwt = new JWT(token);
 ```
 
-A `JWTException` will raise with a detailed message if the token has:
+A `DecodeException` will raise with a detailed message if the token has:
 * An invalid part count.
 * A part not encoded as Base64 + UTF-8.
 * A Header or Payload without a valid JSON format.
@@ -114,7 +114,7 @@ To obtain a Claim as a Collection you'll need to provide the **Class Type** of t
 * **asArray(class)**: Returns the value parsed as an Array of elements of type **Class Type**, or an empty Array if the value isn't an JSON Array.
 * **asList(class)**: Returns the value parsed as a List of elements of type **Class Type**, or an empty List if the value isn't an JSON Array.
 
-If the values inside the JSON Array can't be converted to the given **Class Type**, a `JsonSyntaxException` will raise.
+If the values inside the JSON Array can't be converted to the given **Class Type**, a `DecodeException` will raise.
 
 ### Sharing the instance
 
