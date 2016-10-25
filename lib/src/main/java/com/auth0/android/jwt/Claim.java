@@ -102,20 +102,24 @@ public class Claim {
      * If the value isn't an Array, an empty Array will be returned.
      *
      * @return the value as an Array or an empty Array.
-     * @throws JsonSyntaxException if the values inside the Array can't be converted to a class T.
+     * @throws DecodeException if the values inside the Array can't be converted to a class T.
      */
     @SuppressWarnings("unchecked")
-    public <T> T[] asArray(Class<T> tClazz) throws JsonSyntaxException {
-        if (!value.isJsonArray() || value.isJsonNull()) {
-            return (T[]) Array.newInstance(tClazz, 0);
+    public <T> T[] asArray(Class<T> tClazz) throws DecodeException {
+        try {
+            if (!value.isJsonArray() || value.isJsonNull()) {
+                return (T[]) Array.newInstance(tClazz, 0);
+            }
+            Gson gson = new Gson();
+            JsonArray jsonArr = value.getAsJsonArray();
+            T[] arr = (T[]) Array.newInstance(tClazz, jsonArr.size());
+            for (int i = 0; i < jsonArr.size(); i++) {
+                arr[i] = gson.fromJson(jsonArr.get(i), tClazz);
+            }
+            return arr;
+        } catch(JsonSyntaxException e) {
+            throw new DecodeException("Failed to decode claim as array", e);
         }
-        Gson gson = new Gson();
-        JsonArray jsonArr = value.getAsJsonArray();
-        T[] arr = (T[]) Array.newInstance(tClazz, jsonArr.size());
-        for (int i = 0; i < jsonArr.size(); i++) {
-            arr[i] = gson.fromJson(jsonArr.get(i), tClazz);
-        }
-        return arr;
     }
 
     /**
@@ -123,18 +127,22 @@ public class Claim {
      * If the value isn't an Array, an empty List will be returned.
      *
      * @return the value as a List or an empty List.
-     * @throws JsonSyntaxException if the values inside the List can't be converted to a class T.
+     * @throws DecodeException if the values inside the List can't be converted to a class T.
      */
-    public <T> List<T> asList(Class<T> tClazz) throws JsonSyntaxException {
-        if (!value.isJsonArray() || value.isJsonNull()) {
-            return new ArrayList<>();
+    public <T> List<T> asList(Class<T> tClazz) throws DecodeException {
+        try {
+            if (!value.isJsonArray() || value.isJsonNull()) {
+                return new ArrayList<>();
+            }
+            Gson gson = new Gson();
+            JsonArray jsonArr = value.getAsJsonArray();
+            List<T> list = new ArrayList<>();
+            for (int i = 0; i < jsonArr.size(); i++) {
+                list.add(gson.fromJson(jsonArr.get(i), tClazz));
+            }
+            return list;
+        } catch(DecodeException e) {
+            throw new DecodeException("Failed to decode claim as list", e);
         }
-        Gson gson = new Gson();
-        JsonArray jsonArr = value.getAsJsonArray();
-        List<T> list = new ArrayList<>();
-        for (int i = 0; i < jsonArr.size(); i++) {
-            list.add(gson.fromJson(jsonArr.get(i), tClazz));
-        }
-        return list;
     }
 }

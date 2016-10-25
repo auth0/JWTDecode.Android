@@ -5,8 +5,6 @@ import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.auth0.android.jwt.exceptions.JWTException;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,28 +41,28 @@ public class JWTTest {
     // Exceptions
     @Test
     public void shouldThrowIfLessThan3Parts() throws Exception {
-        exception.expect(JWTException.class);
+        exception.expect(DecodeException.class);
         exception.expectMessage("The token was expected to have 3 parts, but got 2.");
         new JWT("two.parts");
     }
 
     @Test
     public void shouldThrowIfMoreThan3Parts() throws Exception {
-        exception.expect(JWTException.class);
+        exception.expect(DecodeException.class);
         exception.expectMessage("The token was expected to have 3 parts, but got 4.");
         new JWT("this.has.four.parts");
     }
 
     @Test
     public void shouldThrowIfItsNotBase64Encoded() throws Exception {
-        exception.expect(JWTException.class);
+        exception.expect(DecodeException.class);
         exception.expectMessage("Received bytes didn't correspond to a valid Base64 encoded string.");
         new JWT("thisIsNot.Base64_Enc.oded");
     }
 
     @Test
     public void shouldThrowIfPayloadHasInvalidJSONFormat() throws Exception {
-        exception.expect(JWTException.class);
+        exception.expect(DecodeException.class);
         exception.expectMessage("The token's payload had an invalid JSON format.");
         new JWT("eyJhbGciOiJIUzI1NiJ9.e30ijfe923.XmNK3GpH3Ys_7lyQ");
     }

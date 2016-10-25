@@ -1,6 +1,5 @@
 package com.auth0.android.jwt;
 
-import com.auth0.android.jwt.exceptions.JWTException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -17,7 +16,7 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
     @Override
     public JWTPayload deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (json.isJsonNull() || !json.isJsonObject()) {
-            throw new JWTException("The token's payload had an invalid JSON format.");
+            throw new DecodeException("The token's payload had an invalid JSON format.");
         }
 
         JsonObject object = json.getAsJsonObject();

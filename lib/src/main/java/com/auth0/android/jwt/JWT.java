@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.auth0.android.jwt.exceptions.JWTException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -34,7 +33,7 @@ public class JWT implements Parcelable {
      * Decode a given string JWT token.
      *
      * @param token the string JWT token.
-     * @throws JWTException if the token cannot be decoded
+     * @throws DecodeException if the token cannot be decoded
      */
     public JWT(@NonNull String token) {
         decode(token);
@@ -202,7 +201,7 @@ public class JWT implements Parcelable {
     private String[] splitToken(String token) {
         String[] parts = token.split("\\.");
         if (parts.length != 3) {
-            throw new JWTException(String.format("The token was expected to have 3 parts, but got %s.", parts.length));
+            throw new DecodeException(String.format("The token was expected to have 3 parts, but got %s.", parts.length));
         }
         return parts;
     }
@@ -214,9 +213,9 @@ public class JWT implements Parcelable {
             byte[] bytes = Base64.decode(string, Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
             decoded = new String(bytes, ENCODING_UTF_8);
         } catch (IllegalArgumentException e) {
-            throw new JWTException("Received bytes didn't correspond to a valid Base64 encoded string.", e);
+            throw new DecodeException("Received bytes didn't correspond to a valid Base64 encoded string.", e);
         } catch (UnsupportedEncodingException e) {
-            throw new JWTException("Device doesn't support UTF-8 charset encoding.", e);
+            throw new DecodeException("Device doesn't support UTF-8 charset encoding.", e);
         }
         return decoded;
     }
@@ -229,7 +228,7 @@ public class JWT implements Parcelable {
         try {
             payload = gson.fromJson(json, typeOfT);
         } catch (Exception e) {
-            throw new JWTException("The token's payload had an invalid JSON format.", e);
+            throw new DecodeException("The token's payload had an invalid JSON format.", e);
         }
         return payload;
     }
