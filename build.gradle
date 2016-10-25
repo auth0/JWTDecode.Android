@@ -12,6 +12,7 @@ buildscript {
 }
 
 allprojects {
+    group = 'com.auth0.android'
     repositories {
         jcenter()
     }
