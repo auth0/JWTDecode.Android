@@ -1,5 +1,7 @@
 # JWTDecode.Android
 
+[![Build Status](https://travis-ci.org/auth0/JWTDecode.Android.svg?branch=master)](https://travis-ci.org/auth0/JWTDecode.Android)
+
 Java library with focus on Android that provides Json Web Token (JWT) decoding.
 
 ## Install
