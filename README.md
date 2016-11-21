@@ -84,10 +84,10 @@ String id = jwt.getId();
 
 #### Time Validation
 
-The JWT token may include DateNumber fields that can be used to validate that the token was issued in a past date `"iat" < TODAY` and that the expiration date is in the future `"exp" > TODAY`. This library includes a method that checks both of this fields and returns the validity of the token. If any of the fields is missing they wont be considered.
+The JWT token may include DateNumber fields that can be used to validate that the token was issued in a past date `"iat" < TODAY` and that the expiration date is in the future `"exp" > TODAY`. This library includes a method that checks both of this fields and returns the validity of the token. If any of the fields is missing they wont be considered. You must provide a positive amount of seconds as leeway to consider in the Date comparison.
 
 ```java
-boolean isExpired = jwt.isExpired();
+boolean isExpired = jwt.isExpired(10); // 10 seconds leeway
 ```
 
 ### Private Claims
@@ -106,7 +106,7 @@ The Claim class is a wrapper for the Claim values. It allows you to get the Clai
 * **asInt()**: Returns the Integer value or null if it can't be converted.
 * **asDouble()**: Returns the Double value or null if it can't be converted.
 * **asString()**: Returns the String value or null if it can't be converted.
-* **asDate()**: Returns the Date value or null if it can't be converted. Note that the [JWT Standard](https://tools.ietf.org/html/rfc7519#section-2) specified that all the *NumericDate* values must be in seconds.
+* **asDate()**: Returns the Date value or null if it can't be converted. Note that the [JWT Standard](https://tools.ietf.org/html/rfc7519#section-2) specified that all the *NumericDate* values must be in seconds. (Epoch / Unix time)
 
 #### Collections
 To obtain a Claim as a Collection you'll need to provide the **Class Type** of the contents to convert from.
@@ -140,7 +140,7 @@ You can also call at any time `jwt.toString()` to get the String representation 
 
 ```java
 JWT jwt = new JWT(res.getHeader("Authorization"));
-if (!jwt.isExpired() && "auth0".equals(jwt.getIssuer())){
+if (!jwt.isExpired(0) && "auth0".equals(jwt.getIssuer())){
     req.putHeader("Authorization", "Bearer " + jwt);
     return;
 } else {

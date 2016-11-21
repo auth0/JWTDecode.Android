@@ -166,40 +166,69 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldBeExpired() throws Exception {
-        long pastSeconds = System.currentTimeMillis() / 1000;
-        long futureSeconds = (System.currentTimeMillis() + 10000) / 1000;
-
-        JWT issuedAndExpiresInTheFuture = customTimeJWT(futureSeconds, futureSeconds);
-        assertTrue(issuedAndExpiresInTheFuture.isExpired());
-        JWT issuedInTheFuture = customTimeJWT(futureSeconds, null);
-        assertTrue(issuedInTheFuture.isExpired());
-
-        JWT issuedAndExpiresInThePast = customTimeJWT(pastSeconds, pastSeconds);
-        assertTrue(issuedAndExpiresInThePast.isExpired());
-        JWT expiresInThePast = customTimeJWT(null, pastSeconds);
-        assertTrue(expiresInThePast.isExpired());
-
-        JWT issuedInTheFutureExpiresInThePast = customTimeJWT(futureSeconds, pastSeconds);
-        assertTrue(issuedInTheFutureExpiresInThePast.isExpired());
+    public void shouldNotBeDeemedExpiredWithoutDateClaims() throws Exception {
+        JWT jwt = customTimeJWT(null, null);
+        assertThat(jwt.isExpired(0), is(false));
     }
 
     @Test
-    public void shouldNotBeExpired() throws Exception {
-        long pastSeconds = System.currentTimeMillis() / 1000;
-        long futureSeconds = (System.currentTimeMillis() + 10000) / 1000;
+    public void shouldNotBeDeemedExpired() throws Exception {
+        JWT jwt = customTimeJWT(null, new Date().getTime() + 2000);
+        assertThat(jwt.isExpired(0), is(false));
+    }
 
-        JWT missingDates = customTimeJWT(null, null);
-        assertFalse(missingDates.isExpired());
+    @Test
+    public void shouldBeDeemedExpired() throws Exception {
+        JWT jwt = customTimeJWT(null, new Date().getTime() - 2000);
+        assertThat(jwt.isExpired(0), is(true));
+    }
 
-        JWT issuedInThePastExpiresInTheFuture = customTimeJWT(pastSeconds, futureSeconds);
-        assertFalse(issuedInThePastExpiresInTheFuture.isExpired());
+    @Test
+    public void shouldNotBeDeemedExpiredByLeeway() throws Exception {
+        JWT jwt = customTimeJWT(null, new Date().getTime() - 1000);
+        assertThat(jwt.isExpired(2), is(false));
+    }
 
-        JWT issuedInThePast = customTimeJWT(pastSeconds, null);
-        assertFalse(issuedInThePast.isExpired());
+    @Test
+    public void shouldBeDeemedExpiredByLeeway() throws Exception {
+        JWT jwt = customTimeJWT(null, new Date().getTime() - 2000);
+        assertThat(jwt.isExpired(1), is(true));
+    }
 
-        JWT expiresInTheFuture = customTimeJWT(null, futureSeconds);
-        assertFalse(expiresInTheFuture.isExpired());
+    @Test
+    public void shouldNotBeDeemedFutureIssued() throws Exception {
+        JWT jwt = customTimeJWT(new Date().getTime() - 2000, null);
+        assertThat(jwt.isExpired(0), is(false));
+    }
+
+    @Test
+    public void shouldBeDeemedFutureIssued() throws Exception {
+        JWT jwt = customTimeJWT(new Date().getTime() + 2000, null);
+        assertThat(jwt.isExpired(0), is(true));
+    }
+
+    @Test
+    public void shouldNotBeDeemedFutureIssuedByLeeway() throws Exception {
+        JWT jwt = customTimeJWT(new Date().getTime() + 1000, null);
+        assertThat(jwt.isExpired(2), is(false));
+    }
+
+    @Test
+    public void shouldBeDeemedFutureIssuedByLeeway() throws Exception {
+        JWT jwt = customTimeJWT(new Date().getTime() + 2000, null);
+        assertThat(jwt.isExpired(1), is(true));
+    }
+
+    @Test
+    public void shouldBeDeemedNotTimeValid() throws Exception {
+        JWT jwt = customTimeJWT(new Date().getTime() + 1000, new Date().getTime() - 1000);
+        assertThat(jwt.isExpired(0), is(true));
+    }
+
+    @Test
+    public void shouldBeDeemedTimeValid() throws Exception {
+        JWT jwt = customTimeJWT(new Date().getTime() - 1000, new Date().getTime() + 1000);
+        assertThat(jwt.isExpired(0), is(false));
     }
 
     //Private Claims
@@ -245,17 +274,26 @@ public class JWTTest {
 
     //Helper Methods
 
-    private JWT customTimeJWT(@Nullable Long iat, @Nullable Long exp) {
+    /**
+     * Creates a new JWT with custom time claims.
+     *
+     * @param iatMs iat value in MILLISECONDS
+     * @param expMs exp value in MILLISECONDS
+     * @return a JWT
+     */
+    private JWT customTimeJWT(@Nullable Long iatMs, @Nullable Long expMs) {
         String header = encodeString("{}");
         StringBuilder bodyBuilder = new StringBuilder("{");
-        if (iat != null) {
-            bodyBuilder.append("\"iat\":\"").append(iat.longValue()).append("\"");
+        if (iatMs != null) {
+            long iatSeconds = iatMs / 1000;
+            bodyBuilder.append("\"iat\":\"").append(iatSeconds).append("\"");
         }
-        if (exp != null) {
-            if (iat != null) {
+        if (expMs != null) {
+            if (iatMs != null) {
                 bodyBuilder.append(",");
             }
-            bodyBuilder.append("\"exp\":\"").append(exp.longValue()).append("\"");
+            long expSeconds = expMs / 1000;
+            bodyBuilder.append("\"exp\":\"").append(expSeconds).append("\"");
         }
         bodyBuilder.append("}");
         String body = encodeString(bodyBuilder.toString());

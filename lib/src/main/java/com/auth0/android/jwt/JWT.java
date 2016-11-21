@@ -144,13 +144,19 @@ public class JWT implements Parcelable {
     /**
      * Validates that this JWT was issued in the past and hasn't expired yet.
      *
+     * @param leeway the time leeway in seconds in which the token should still be considered valid.
      * @return if this JWT has already expired or not.
      */
-    public boolean isExpired() {
-        final Date today = new Date();
-        boolean issuedInTheFuture = payload.iat != null && payload.iat.after(today);
-        boolean expired = payload.exp != null && payload.exp.before(today);
-        return issuedInTheFuture || expired;
+    public boolean isExpired(long leeway) {
+        if (leeway < 0) {
+            throw new IllegalArgumentException("The leeway must be a positive value.");
+        }
+        long todayTime = (long) (Math.floor(new Date().getTime() / 1000) * 1000); //truncate millis
+        Date futureToday = new Date((todayTime + leeway * 1000));
+        Date pastToday = new Date((todayTime - leeway * 1000));
+        boolean expValid = payload.exp == null || !pastToday.after(payload.exp);
+        boolean iatValid = payload.iat == null || !futureToday.before(payload.iat);
+        return !expValid || !iatValid;
     }
 
     /**
