@@ -165,7 +165,7 @@ public class ClaimTest {
         JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
         Claim claim = new Claim(value);
 
-        exception.expect(JsonSyntaxException.class);
+        exception.expect(DecodeException.class);
         claim.asArray(UserPojo.class);
     }
 
@@ -210,7 +210,7 @@ public class ClaimTest {
         JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
         Claim claim = new Claim(value);
 
-        exception.expect(JsonSyntaxException.class);
+        exception.expect(DecodeException.class);
         claim.asList(UserPojo.class);
     }
 }

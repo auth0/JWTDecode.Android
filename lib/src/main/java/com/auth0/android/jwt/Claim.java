@@ -117,7 +117,7 @@ public class Claim {
                 arr[i] = gson.fromJson(jsonArr.get(i), tClazz);
             }
             return arr;
-        } catch(JsonSyntaxException e) {
+        } catch (JsonSyntaxException e) {
             throw new DecodeException("Failed to decode claim as array", e);
         }
     }
@@ -141,7 +141,7 @@ public class Claim {
                 list.add(gson.fromJson(jsonArr.get(i), tClazz));
             }
             return list;
-        } catch(DecodeException e) {
+        } catch (JsonSyntaxException e) {
             throw new DecodeException("Failed to decode claim as list", e);
         }
     }
