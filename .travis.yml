@@ -17,8 +17,8 @@ cache:
     - $HOME/.gradle/wrapper/
 script:
   - "./gradlew clean test jacocoTestReport --continue"
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+#after_success:
+#  - bash <(curl -s https://codecov.io/bash)
 branches:
   only:
   - master
