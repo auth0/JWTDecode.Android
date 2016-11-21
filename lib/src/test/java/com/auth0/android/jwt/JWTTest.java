@@ -231,6 +231,14 @@ public class JWTTest {
         assertThat(jwt.isExpired(0), is(false));
     }
 
+    @Test
+    public void shouldThrowIfLeewayIsNegative() throws Exception {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("The leeway must be a positive value.");
+        JWT jwt = customTimeJWT(null, null);
+        jwt.isExpired(-1);
+    }
+
     //Private Claims
 
     @Test
