@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
+import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,12 +24,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
-import static org.hamcrest.collection.IsArrayWithSize.arrayWithSize;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 23)
@@ -103,6 +103,14 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldGetNullIssuerIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getIssuer(), is(nullValue()));
+    }
+
+    @Test
     public void shouldGetSubject() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUb2szbnMifQ.RudAxkslimoOY3BLl2Ghny3BrUKu9I1ZrXzCZGDJtNs");
         assertThat(jwt, is(notNullValue()));
@@ -110,19 +118,35 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldGetNullSubjectIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getSubject(), is(nullValue()));
+    }
+
+    @Test
     public void shouldGetArrayAudience() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiSG9wZSIsIlRyYXZpcyIsIlNvbG9tb24iXX0.Tm4W8WnfPjlmHSmKFakdij0on2rWPETpoM7Sh0u6-S4");
         assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getAudience(), is(arrayWithSize(3)));
-        assertThat(jwt.getAudience(), is(arrayContaining("Hope", "Travis", "Solomon")));
+        assertThat(jwt.getAudience(), is(hasSize(3)));
+        assertThat(jwt.getAudience(), is(hasItems("Hope", "Travis", "Solomon")));
     }
 
     @Test
     public void shouldGetStringAudience() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJKYWNrIFJleWVzIn0.a4I9BBhPt1OB1GW67g2P1bEHgi6zgOjGUL4LvhE9Dgc");
         assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getAudience(), is(arrayWithSize(1)));
-        assertThat(jwt.getAudience(), is(arrayContaining("Jack Reyes")));
+        assertThat(jwt.getAudience(), is(hasSize(1)));
+        assertThat(jwt.getAudience(), is(hasItems("Jack Reyes")));
+    }
+
+    @Test
+    public void shouldGetEmptyListAudienceIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getAudience(), IsEmptyCollection.<String>empty());
     }
 
     @Test
@@ -137,6 +161,14 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldGetNullExpirationTimeIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getExpiresAt(), is(nullValue()));
+    }
+
+    @Test
     public void shouldGetNotBefore() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJuYmYiOiIxNDc2NzI3MDg2In0.pi3Fi3oFiXk5A5AetDdL0hjVx_rt6F5r_YiG6HoCYDw");
         assertThat(jwt, is(notNullValue()));
@@ -145,6 +177,14 @@ public class JWTTest {
         Date expectedDate = new Date(ms);
         assertThat(jwt.getNotBefore(), is(notNullValue()));
         assertThat(jwt.getNotBefore(), is(equalTo(expectedDate)));
+    }
+
+    @Test
+    public void shouldGetNullNotBeforeIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getNotBefore(), is(nullValue()));
     }
 
     @Test
@@ -159,10 +199,26 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldGetNullIssuedAtIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getIssuedAt(), is(nullValue()));
+    }
+
+    @Test
     public void shouldGetId() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjM0NTY3ODkwIn0.m3zgEfVUFOd-CvL3xG5BuOWLzb0zMQZCqiVNQQOPOvA");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getId(), is("1234567890"));
+    }
+
+    @Test
+    public void shouldGetNullIdIfMissing() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
+        assertThat(jwt, is(notNullValue()));
+
+        Assert.assertThat(jwt.getId(), is(nullValue()));
     }
 
     @Test

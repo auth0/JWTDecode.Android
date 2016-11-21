@@ -8,8 +8,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class JWTDeserializer implements JsonDeserializer<JWTPayload> {
@@ -28,7 +31,7 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         Date nbf = removeDate(object, "nbf");
         Date iat = removeDate(object, "iat");
         String jti = removeString(object, "jti");
-        String[] aud = removeStringOrArray(object, "aud");
+        List<String> aud = removeStringOrArray(object, "aud");
 
         //Private Claims
         Map<String, Claim> extra = new HashMap<>();
@@ -39,21 +42,21 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         return new JWTPayload(iss, sub, exp, nbf, iat, jti, aud, extra);
     }
 
-    private String[] removeStringOrArray(JsonObject obj, String claimName) {
-        String[] arr = null;
+    private List<String> removeStringOrArray(JsonObject obj, String claimName) {
+        List<String> list = Collections.emptyList();
         if (obj.has(claimName)) {
             JsonElement arrElement = obj.remove(claimName);
             if (arrElement.isJsonArray()) {
                 JsonArray jsonArr = arrElement.getAsJsonArray();
-                arr = new String[jsonArr.size()];
+                list = new ArrayList<>(jsonArr.size());
                 for (int i = 0; i < jsonArr.size(); i++) {
-                    arr[i] = jsonArr.get(i).getAsString();
+                    list.add(jsonArr.get(i).getAsString());
                 }
             } else {
-                arr = new String[]{arrElement.getAsString()};
+                list = Collections.singletonList(arrElement.getAsString());
             }
         }
-        return arr;
+        return list;
     }
 
     private Date removeDate(JsonObject obj, String claimName) {

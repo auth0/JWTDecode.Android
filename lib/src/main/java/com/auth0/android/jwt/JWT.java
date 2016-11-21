@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,12 +82,12 @@ public class JWT implements Parcelable {
     }
 
     /**
-     * Get the value of the "aud" claim, or null if it's not available.
+     * Get the value of the "aud" claim, or an empty list if it's not available.
      *
-     * @return the Audience value or null.
+     * @return the Audience value or an empty list.
      */
     @Nullable
-    public String[] getAudience() {
+    public List<String> getAudience() {
         return payload.aud;
     }
 
