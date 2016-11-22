@@ -94,7 +94,7 @@ boolean isExpired = jwt.isExpired(10); // 10 seconds leeway
 
 ### Private Claims
 
-Additional Claims defined in the token can be obtained by calling `getClaim` and passing the Claim name. If the claim can't be found, null will be returned.
+Additional Claims defined in the token can be obtained by calling `getClaim` and passing the Claim name. If the claim can't be found, a BaseClaim will be returned. BaseClaim will return null on every method call except for the `asList` and `asArray`.
 
 ```java
 Claim claim = jwt.getClaim("isAdmin");

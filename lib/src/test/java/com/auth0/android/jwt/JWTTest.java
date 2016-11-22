@@ -298,10 +298,12 @@ public class JWTTest {
     //Private Claims
 
     @Test
-    public void shouldGetNullIfClaimIsMissing() throws Exception {
+    public void shouldGetBaseClaimIfClaimIsMissing() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.K17vlwhE8FCMShdl1_65jEYqsQqBOVMPUU9IgG-QlTM");
         assertThat(jwt, is(notNullValue()));
-        assertThat(jwt.getClaim("notExisting"), is(nullValue()));
+        assertThat(jwt.getClaim("notExisting"), is(notNullValue()));
+        assertThat(jwt.getClaim("notExisting"), is(not(instanceOf(ClaimImpl.class))));
+        assertThat(jwt.getClaim("notExisting"), is(instanceOf(BaseClaim.class)));
     }
 
     @Test
@@ -309,7 +311,7 @@ public class JWTTest {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifX0.lrU1gZlOdlmTTeZwq0VI-pZx2iV46UWYd5-lCjy6-c4");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getClaim("object"), is(notNullValue()));
-        assertThat(jwt.getClaim("object"), is(instanceOf(Claim.class)));
+        assertThat(jwt.getClaim("object"), is(instanceOf(ClaimImpl.class)));
     }
 
     //Parcelable

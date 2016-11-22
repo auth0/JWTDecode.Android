@@ -36,7 +36,7 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         //Private Claims
         Map<String, Claim> extra = new HashMap<>();
         for (Map.Entry<String, JsonElement> e : object.entrySet()) {
-            extra.put(e.getKey(), new Claim(e.getValue()));
+            extra.put(e.getKey(), new ClaimImpl(e.getValue()));
         }
 
         return new JWTPayload(iss, sub, exp, nbf, iat, jti, aud, extra);
