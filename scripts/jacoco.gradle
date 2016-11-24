@@ -1,0 +1,56 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    // https://bintray.com/bintray/jcenter/org.jacoco:org.jacoco.core
+    toolVersion = "0.7.7.201606060606"
+}
+
+android {
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+}
+
+project.afterEvaluate {
+
+    def jacocoTestReportTask = tasks.findByName("jacocoTestReport")
+    if (!jacocoTestReportTask) {
+        jacocoTestReportTask = tasks.create("jacocoTestReport")
+        jacocoTestReportTask.group = "Reporting"
+        jacocoTestReportTask.description = "Generate Jacoco coverage reports for all builds."
+    }
+
+    android.libraryVariants.all { variant ->
+        def name = variant.name
+        def testTaskName = "test${name.capitalize()}UnitTest"
+
+        def reportTask = tasks.create(name: "jacocoTest${name.capitalize()}UnitTestReport", type: JacocoReport, dependsOn: "$testTaskName") {
+            group = "Reporting"
+            description = "Generate Jacoco coverage reports for the ${name.capitalize()} build."
+
+            classDirectories = fileTree(
+                    dir: "${project.buildDir}/intermediates/classes/${name}",
+                    excludes: ['**/R.class',
+                               '**/R$*.class',
+                               '**/*$ViewInjector*.*',
+                               '**/*$ViewBinder*.*',
+                               '**/BuildConfig.*',
+                               '**/Manifest*.*']
+            )
+
+            sourceDirectories = files(['src/main/java'].plus(android.sourceSets[name].java.srcDirs))
+            executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
+
+            reports {
+                xml.enabled = true
+                html.enabled = true
+            }
+        }
+
+        jacocoTestReportTask.dependsOn reportTask
+    }
+}
