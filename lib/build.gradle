@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
+apply from: '../scripts/jacoco.gradle'
 
 def semver = defineVersion()
 version = semver.stringVersion

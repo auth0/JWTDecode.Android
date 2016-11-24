@@ -1,6 +1,7 @@
 # JWTDecode.Android
 
 [![Build Status](https://travis-ci.org/auth0/JWTDecode.Android.svg?branch=master)](https://travis-ci.org/auth0/JWTDecode.Android)
+[![codecov](https://codecov.io/gh/auth0/JWTDecode.android/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/JWTDecode.android)
 
 Java library with focus on Android that provides Json Web Token (JWT) decoding.
 
