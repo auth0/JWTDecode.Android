@@ -16,6 +16,7 @@ public interface Claim {
      * If the value isn't of type Boolean or it can't be converted to a Boolean, null will be returned.
      *
      * @return the value as a Boolean or null.
+     * @throws DecodeException if the value can't be converted to a Boolean.
      */
     @Nullable
     Boolean asBoolean();
@@ -25,6 +26,7 @@ public interface Claim {
      * If the value isn't of type Integer or it can't be converted to an Integer, null will be returned.
      *
      * @return the value as an Integer or null.
+     * @throws DecodeException if the value can't be converted to an Int.
      */
     @Nullable
     Integer asInt();
@@ -34,6 +36,7 @@ public interface Claim {
      * If the value isn't of type Double or it can't be converted to a Double, null will be returned.
      *
      * @return the value as a Double or null.
+     * @throws DecodeException if the value can't be converted to a Double.
      */
     @Nullable
     Double asDouble();
@@ -43,6 +46,7 @@ public interface Claim {
      * If the value isn't of type String or it can't be converted to a String, null will be returned.
      *
      * @return the value as a String or null.
+     * @throws DecodeException if the value can't be converted to a String.
      */
     @Nullable
     String asString();
@@ -52,6 +56,7 @@ public interface Claim {
      * If the value can't be converted to a Date, null will be returned.
      *
      * @return the value as a Date or null.
+     * @throws DecodeException if the value can't be converted to a Date.
      */
     @Nullable
     Date asDate();
