@@ -7,7 +7,7 @@ android:
   - tools
   - build-tools-24.0.3
   - android-24
-  - extra-android-m2repository
+  - tree-android-m2repository
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/

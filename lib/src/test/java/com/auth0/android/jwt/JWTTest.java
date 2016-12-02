@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import org.hamcrest.collection.IsEmptyCollection;
+import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -294,6 +295,30 @@ public class JWTTest {
         JWT jwt = customTimeJWT(null, null);
         jwt.isExpired(-1);
     }
+
+    @Test
+    public void shouldNotRemoveKnownPublicClaimsFromTree() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoMCIsInN1YiI6ImVtYWlscyIsImF1ZCI6InVzZXJzIiwiaWF0IjoxMDEwMTAxMCwiZXhwIjoxMTExMTExMSwibmJmIjoxMDEwMTAxMSwianRpIjoiaWRpZCIsInJvbGVzIjoiYWRtaW4ifQ.jCchxb-mdMTq5EpeVMSQyTp6zSwByKnfl9U-Zc9kg_w");
+
+        assertThat(jwt, is(notNullValue()));
+        assertThat(jwt.getIssuer(), is("auth0"));
+        assertThat(jwt.getSubject(), is("emails"));
+        assertThat(jwt.getAudience(), is(IsCollectionContaining.hasItem("users")));
+        assertThat(jwt.getIssuedAt().getTime(), is(10101010L * 1000));
+        assertThat(jwt.getExpiresAt().getTime(), is(11111111L * 1000));
+        assertThat(jwt.getNotBefore().getTime(), is(10101011L * 1000));
+        assertThat(jwt.getId(), is("idid"));
+
+        assertThat(jwt.getClaim("roles").asString(), is("admin"));
+        assertThat(jwt.getClaim("iss").asString(), is("auth0"));
+        assertThat(jwt.getClaim("sub").asString(), is("emails"));
+        assertThat(jwt.getClaim("aud").asString(), is("users"));
+        assertThat(jwt.getClaim("iat").asDouble(), is(10101010D));
+        assertThat(jwt.getClaim("exp").asDouble(), is(11111111D));
+        assertThat(jwt.getClaim("nbf").asDouble(), is(10101011D));
+        assertThat(jwt.getClaim("jti").asString(), is("idid"));
+    }
+
 
     //Private Claims
 
