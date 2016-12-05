@@ -139,8 +139,7 @@ public class JWT implements Parcelable {
      */
     @Nullable
     public Claim getClaim(@NonNull String name) {
-        final Claim claim = payload.tree.get(name);
-        return claim != null ? claim : new BaseClaim();
+        return payload.claimForName(name);
     }
 
     /**
