@@ -4,6 +4,10 @@ apply from: '../scripts/release.gradle'
 
 logger.lifecycle("Using version ${version} for ${name}")
 
+oss {
+    library 'jwtdecode.android'
+}
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
