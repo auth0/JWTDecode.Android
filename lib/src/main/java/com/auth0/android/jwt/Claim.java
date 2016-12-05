@@ -1,29 +1,14 @@
 package com.auth0.android.jwt;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * A Claim is a value contained inside the JWT Payload.
+ * The Claim class holds the value in a generic way so that it can be recovered in many representations.
  */
-@SuppressWarnings("WeakerAccess")
-public class Claim {
-
-    private final JsonElement value;
-
-    Claim(@NonNull JsonElement value) {
-        this.value = value;
-    }
+public interface Claim {
 
 
     /**
@@ -33,12 +18,7 @@ public class Claim {
      * @return the value as a Boolean or null.
      */
     @Nullable
-    public Boolean asBoolean() {
-        if (!value.isJsonPrimitive()) {
-            return null;
-        }
-        return value.getAsBoolean();
-    }
+    Boolean asBoolean();
 
     /**
      * Get this Claim as an Integer.
@@ -47,12 +27,7 @@ public class Claim {
      * @return the value as an Integer or null.
      */
     @Nullable
-    public Integer asInt() {
-        if (!value.isJsonPrimitive()) {
-            return null;
-        }
-        return value.getAsInt();
-    }
+    Integer asInt();
 
     /**
      * Get this Claim as a Double.
@@ -61,12 +36,7 @@ public class Claim {
      * @return the value as a Double or null.
      */
     @Nullable
-    public Double asDouble() {
-        if (!value.isJsonPrimitive()) {
-            return null;
-        }
-        return value.getAsDouble();
-    }
+    Double asDouble();
 
     /**
      * Get this Claim as a String.
@@ -75,12 +45,7 @@ public class Claim {
      * @return the value as a String or null.
      */
     @Nullable
-    public String asString() {
-        if (!value.isJsonPrimitive()) {
-            return null;
-        }
-        return value.getAsString();
-    }
+    String asString();
 
     /**
      * Get this Claim as a Date.
@@ -89,13 +54,7 @@ public class Claim {
      * @return the value as a Date or null.
      */
     @Nullable
-    public Date asDate() {
-        if (!value.isJsonPrimitive()) {
-            return null;
-        }
-        long ms = Long.parseLong(value.getAsString()) * 1000;
-        return new Date(ms);
-    }
+    Date asDate();
 
     /**
      * Get this Claim as an Array of type T.
@@ -104,23 +63,7 @@ public class Claim {
      * @return the value as an Array or an empty Array.
      * @throws DecodeException if the values inside the Array can't be converted to a class T.
      */
-    @SuppressWarnings("unchecked")
-    public <T> T[] asArray(Class<T> tClazz) throws DecodeException {
-        try {
-            if (!value.isJsonArray() || value.isJsonNull()) {
-                return (T[]) Array.newInstance(tClazz, 0);
-            }
-            Gson gson = new Gson();
-            JsonArray jsonArr = value.getAsJsonArray();
-            T[] arr = (T[]) Array.newInstance(tClazz, jsonArr.size());
-            for (int i = 0; i < jsonArr.size(); i++) {
-                arr[i] = gson.fromJson(jsonArr.get(i), tClazz);
-            }
-            return arr;
-        } catch (JsonSyntaxException e) {
-            throw new DecodeException("Failed to decode claim as array", e);
-        }
-    }
+    <T> T[] asArray(Class<T> tClazz) throws DecodeException;
 
     /**
      * Get this Claim as a List of type T.
@@ -129,20 +72,5 @@ public class Claim {
      * @return the value as a List or an empty List.
      * @throws DecodeException if the values inside the List can't be converted to a class T.
      */
-    public <T> List<T> asList(Class<T> tClazz) throws DecodeException {
-        try {
-            if (!value.isJsonArray() || value.isJsonNull()) {
-                return new ArrayList<>();
-            }
-            Gson gson = new Gson();
-            JsonArray jsonArr = value.getAsJsonArray();
-            List<T> list = new ArrayList<>();
-            for (int i = 0; i < jsonArr.size(); i++) {
-                list.add(gson.fromJson(jsonArr.get(i), tClazz));
-            }
-            return list;
-        } catch (JsonSyntaxException e) {
-            throw new DecodeException("Failed to decode claim as list", e);
-        }
-    }
+    <T> List<T> asList(Class<T> tClazz) throws DecodeException;
 }
