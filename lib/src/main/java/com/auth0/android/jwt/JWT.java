@@ -139,7 +139,7 @@ public class JWT implements Parcelable {
      */
     @Nullable
     public Claim getClaim(@NonNull String name) {
-        return payload.extra.containsKey(name) ? payload.extra.get(name) : new BaseClaim();
+        return payload.claimForName(name);
     }
 
     /**
@@ -228,15 +228,18 @@ public class JWT implements Parcelable {
     }
 
     private <T> T parseJson(String json, Type typeOfT) {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(JWTPayload.class, new JWTDeserializer())
-                .create();
         T payload;
         try {
-            payload = gson.fromJson(json, typeOfT);
+            payload = getGson().fromJson(json, typeOfT);
         } catch (Exception e) {
             throw new DecodeException("The token's payload had an invalid JSON format.", e);
         }
         return payload;
+    }
+
+    static Gson getGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(JWTPayload.class, new JWTDeserializer())
+                .create();
     }
 }

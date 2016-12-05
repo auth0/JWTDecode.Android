@@ -6,16 +6,16 @@ import java.util.Map;
 
 class JWTPayload {
 
-    String iss;
-    String sub;
-    Date exp;
-    Date nbf;
-    Date iat;
-    String jti;
-    List<String> aud;
-    Map<String, Claim> extra;
+    final String iss;
+    final String sub;
+    final Date exp;
+    final Date nbf;
+    final Date iat;
+    final String jti;
+    final List<String> aud;
+    private final  Map<String, Claim> tree;
 
-    JWTPayload(String iss, String sub, Date exp, Date nbf, Date iat, String jti, List<String> aud, Map<String, Claim> extra) {
+    JWTPayload(String iss, String sub, Date exp, Date nbf, Date iat, String jti, List<String> aud, Map<String, Claim> tree) {
         this.iss = iss;
         this.sub = sub;
         this.exp = exp;
@@ -23,7 +23,11 @@ class JWTPayload {
         this.iat = iat;
         this.jti = jti;
         this.aud = aud;
-        this.extra = extra;
+        this.tree = tree;
     }
 
+    Claim claimForName(String name) {
+        final Claim claim = this.tree.get(name);
+        return claim != null ? claim : new BaseClaim();
+    }
 }

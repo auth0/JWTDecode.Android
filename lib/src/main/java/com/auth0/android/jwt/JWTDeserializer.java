@@ -25,13 +25,13 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         JsonObject object = json.getAsJsonObject();
 
         //Public Claims
-        String iss = removeString(object, "iss");
-        String sub = removeString(object, "sub");
-        Date exp = removeDate(object, "exp");
-        Date nbf = removeDate(object, "nbf");
-        Date iat = removeDate(object, "iat");
-        String jti = removeString(object, "jti");
-        List<String> aud = removeStringOrArray(object, "aud");
+        String iss = getString(object, "iss");
+        String sub = getString(object, "sub");
+        Date exp = getDate(object, "exp");
+        Date nbf = getDate(object, "nbf");
+        Date iat = getDate(object, "iat");
+        String jti = getString(object, "jti");
+        List<String> aud = getStringOrArray(object, "aud");
 
         //Private Claims
         Map<String, Claim> extra = new HashMap<>();
@@ -42,10 +42,10 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         return new JWTPayload(iss, sub, exp, nbf, iat, jti, aud, extra);
     }
 
-    private List<String> removeStringOrArray(JsonObject obj, String claimName) {
+    private List<String> getStringOrArray(JsonObject obj, String claimName) {
         List<String> list = Collections.emptyList();
         if (obj.has(claimName)) {
-            JsonElement arrElement = obj.remove(claimName);
+            JsonElement arrElement = obj.get(claimName);
             if (arrElement.isJsonArray()) {
                 JsonArray jsonArr = arrElement.getAsJsonArray();
                 list = new ArrayList<>(jsonArr.size());
@@ -59,18 +59,18 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         return list;
     }
 
-    private Date removeDate(JsonObject obj, String claimName) {
+    private Date getDate(JsonObject obj, String claimName) {
         if (!obj.has(claimName)) {
             return null;
         }
-        long ms = obj.remove(claimName).getAsLong() * 1000;
+        long ms = obj.get(claimName).getAsLong() * 1000;
         return new Date(ms);
     }
 
-    private String removeString(JsonObject obj, String claimName) {
+    private String getString(JsonObject obj, String claimName) {
         if (!obj.has(claimName)) {
             return null;
         }
-        return obj.remove(claimName).getAsString();
+        return obj.get(claimName).getAsString();
     }
 }
