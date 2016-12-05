@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.1.0](https://github.com/auth0/jwtdecode.android/tree/1.1.0) (2016-12-05)
+[Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.0.0...1.1.0)
+
+**Changed**
+- Keep public claims instead of removing them [\#7](https://github.com/auth0/JWTDecode.Android/pull/7) ([lbalmaceda](https://github.com/lbalmaceda))
+- Return BaseClaim if custom Claim not found [\#4](https://github.com/auth0/JWTDecode.Android/pull/4) ([lbalmaceda](https://github.com/lbalmaceda))
+
 ## [1.0.0](https://github.com/auth0/lock/tree/1.0.0) (2016-10-25)
 [Full Changelog](https://github.com/auth0/lock/tree/1.0.0)
 
