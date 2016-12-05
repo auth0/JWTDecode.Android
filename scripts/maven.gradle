@@ -20,6 +20,16 @@ install {
                 }
                 developers {
                     developer {
+                        id 'auth0'
+                        name 'Auth0'
+                        email 'oss@auth0.com'
+                    }
+                    developer {
+                        id 'lbalmaceda'
+                        name 'Luciano Balmaceda'
+                        email 'luciano.balmaceda@auth0.com'
+                    }
+                    developer {
                         id 'hzalaz'
                         name 'Hernan Zalazar'
                         email 'hernan@auth0.com'

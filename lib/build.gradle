@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 apply from: '../scripts/jacoco.gradle'
+apply from: '../scripts/release.gradle'
 
-def semver = defineVersion()
-version = semver.stringVersion
+logger.lifecycle("Using version ${version} for ${name}")
 
 android {
     compileSdkVersion 24
