@@ -151,6 +151,19 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldDeserializeDatesUsingLong() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjIxNDc0OTM2NDcsIm5iZiI6MjE0NzQ5MzY0NywiZXhwIjoyMTQ3NDkzNjQ3LCJjdG0iOjIxNDc0OTM2NDd9.txmUJ0UCy2pqTFrEgj49eNDQCWUSW_XRMjMaRqcrgLg");
+        assertThat(jwt, is(notNullValue()));
+
+        long secs = Integer.MAX_VALUE + 10000L;
+        Date expectedDate = new Date(secs * 1000);
+        assertThat(jwt.getIssuedAt(), is(expectedDate));
+        assertThat(jwt.getNotBefore(), is(expectedDate));
+        assertThat(jwt.getExpiresAt(), is(expectedDate));
+        assertThat(jwt.getClaim("ctm").asDate(), is(expectedDate));
+    }
+
+    @Test
     public void shouldGetExpirationTime() throws Exception {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJleHAiOiIxNDc2NzI3MDg2In0.XwZztHlQwnAgmnQvrcWXJloLOUaLZGiY0HOXJCKRaks");
         assertThat(jwt, is(notNullValue()));

@@ -90,6 +90,18 @@ public class ClaimImplTest {
     }
 
     @Test
+    public void shouldGetLargeDateValue() throws Exception {
+        long seconds = Integer.MAX_VALUE + 10000L;
+        JsonElement value = gson.toJsonTree(seconds);
+        ClaimImpl claim = new ClaimImpl(value);
+
+        Date date = claim.asDate();
+        assertThat(date, is(notNullValue()));
+        assertThat(date.getTime(), is(seconds * 1000));
+        assertThat(date.getTime(), is(2147493647L * 1000));
+    }
+
+    @Test
     public void shouldGetDateValue() throws Exception {
         JsonElement value = gson.toJsonTree("1476824844");
         ClaimImpl claim = new ClaimImpl(value);
