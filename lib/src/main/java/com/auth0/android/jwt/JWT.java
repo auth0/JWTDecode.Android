@@ -137,7 +137,7 @@ public class JWT implements Parcelable {
      * @param name the name of the Claim to retrieve.
      * @return a valid Claim.
      */
-    @Nullable
+    @NonNull
     public Claim getClaim(@NonNull String name) {
         return payload.claimForName(name);
     }
