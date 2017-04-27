@@ -1,19 +1,32 @@
 apply plugin: 'com.android.library'
-apply from: '../scripts/jacoco.gradle'
-apply from: '../scripts/release.gradle'
+apply plugin: 'com.auth0.gradle.oss-library.android'
 
 logger.lifecycle("Using version ${version} for ${name}")
 
 oss {
-    library 'jwtdecode.android'
+    name 'jwtdecode'
+    repository 'jwtdecode.android'
+    organization 'auth0'
+    description 'JWT Decoding library for Android'
+
+    developers {
+        auth0 {
+            displayName = 'Auth0'
+            email = 'oss@auth0.com'
+        }
+        lbalmaceda {
+            displayName = 'Luciano Balmaceda'
+            email = 'luciano.balmaceda@auth0.com'
+        }
+    }
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -28,55 +41,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
     testCompile 'org.robolectric:robolectric:3.1.4'
     testCompile 'org.mockito:mockito-core:2.2.5'
 }
-
-def defineVersion() {
-    def current = describeGit(false)
-    def snapshot = current == null
-    if (snapshot) {
-        current = describeGit(snapshot, "0.0.1")
-    }
-    return new Semver(snapshot: snapshot, version: current)
-}
-
-def describeGit(boolean snapshot, String defaultValue = null) {
-    def arguments = ['describe', '--tags']
-    arguments.add(snapshot ? '--abbrev=0' : '--exact-match')
-    def stdout = new ByteArrayOutputStream()
-    def string = defaultValue
-    try {
-        def result = project.exec {
-            executable = 'git'
-            args = arguments
-            standardOutput = stdout
-        }
-
-        result.assertNormalExitValue()
-
-        if (stdout.toByteArray().length > 0) {
-            string = stdout.toString().replace("\n", "")
-        }
-    } catch (Exception e) {
-        logger.debug("Failed git describe command", e)
-    } finally {
-        stdout.close()
-    }
-    return string
-}
-
-class Semver {
-    def version
-    def snapshot
-
-    def getStringVersion() {
-        return snapshot ? version + "-SNAPSHOT" : version
-    }
-}
-
-apply from: '../scripts/maven.gradle'
-apply from: '../scripts/bintray.gradle'
