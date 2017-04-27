@@ -2,7 +2,7 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/github/auth0/JWTDecode.Android.svg?style=flat-square)](https://circleci.com/gh/auth0/JWTDecode.Android/tree/master)
 [![codecov](https://codecov.io/gh/auth0/JWTDecode.android/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/JWTDecode.android)
-[ ![Download](https://api.bintray.com/packages/auth0/android/JWTDecode.Android/images/download.svg) ](https://bintray.com/auth0/android/JWTDecode.Android/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/auth0/android/jwtdecode/images/download.svg) ](https://bintray.com/auth0/android/jwtdecode/_latestVersion)
 
 Java library with focus on Android that provides Json Web Token (JWT) decoding.
 
