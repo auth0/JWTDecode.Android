@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.1.1](https://github.com/auth0/jwtdecode.android/tree/1.1.1) (2017-04-27)
+[Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.1.0...1.1.1)
+
+**Fixed**
+- Change getClaim annotation to nonNull [\#9](https://github.com/auth0/JWTDecode.Android/pull/9) ([lbalmaceda](https://github.com/lbalmaceda))
+
 ## [1.1.0](https://github.com/auth0/jwtdecode.android/tree/1.1.0) (2016-12-05)
 [Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.0.0...1.1.0)
 

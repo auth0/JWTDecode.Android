@@ -10,7 +10,7 @@ Java library with focus on Android that provides Json Web Token (JWT) decoding.
 The library is be available both in Maven Central and JCenter. To start using it add this line to your `build.gradle` dependencies file:
 
 ```groovy
-compile 'com.auth0.android:jwtdecode:1.1.0'
+compile 'com.auth0.android:jwtdecode:1.1.1'
 ```
 
 ## Usage
