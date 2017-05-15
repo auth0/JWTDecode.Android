@@ -28,7 +28,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @Config(constants = BuildConfig.class, sdk = 23)
 public class ClaimImplTest {
 
-    Gson gson;
+    private Gson gson;
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -48,7 +48,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullBooleanIfNotPrimitiveValue() throws Exception {
+    public void shouldReturnNullIfBooleanNotPrimitiveValue() throws Exception {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -65,7 +65,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullIntIfNotPrimitiveValue() throws Exception {
+    public void shouldReturnIfIntNotPrimitiveValue() throws Exception {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -82,10 +82,9 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullDoubleIfNotPrimitiveValue() throws Exception {
+    public void shouldReturnNullIfDoubleNotPrimitiveValue() throws Exception {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
-
         assertThat(claim.asDouble(), is(nullValue()));
     }
 
@@ -111,10 +110,9 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullDateIfNotPrimitiveValue() throws Exception {
+    public void shouldReturnNullIfDateNotPrimitiveValue() throws Exception {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
-
         assertThat(claim.asDate(), is(nullValue()));
     }
 
@@ -128,10 +126,9 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullStringIfNotPrimitiveValue() throws Exception {
+    public void shouldNullIfStringNotPrimitiveValue() throws Exception {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
-
         assertThat(claim.asString(), is(nullValue()));
     }
 
