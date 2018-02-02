@@ -149,15 +149,27 @@ public class JWT implements Parcelable {
      * @return if this JWT has already expired or not.
      */
     public boolean isExpired(long leeway) {
+        return !isExpValid(leeway) || !isIatValid(leeway);
+    }
+
+    public boolean isExpValid(long leeway) {
         if (leeway < 0) {
             throw new IllegalArgumentException("The leeway must be a positive value.");
         }
         long todayTime = (long) (Math.floor(new Date().getTime() / 1000) * 1000); //truncate millis
         Date futureToday = new Date((todayTime + leeway * 1000));
         Date pastToday = new Date((todayTime - leeway * 1000));
-        boolean expValid = payload.exp == null || !pastToday.after(payload.exp);
-        boolean iatValid = payload.iat == null || !futureToday.before(payload.iat);
-        return !expValid || !iatValid;
+        return payload.exp == null || !pastToday.after(payload.exp);
+    }
+
+    public boolean isIatValid(long leeway) {
+        if (leeway < 0) {
+            throw new IllegalArgumentException("The leeway must be a positive value.");
+        }
+        long todayTime = (long) (Math.floor(new Date().getTime() / 1000) * 1000); //truncate millis
+        Date futureToday = new Date((todayTime + leeway * 1000));
+        Date pastToday = new Date((todayTime - leeway * 1000));
+        return payload.iat == null || !futureToday.before(payload.iat);
     }
 
     /**
