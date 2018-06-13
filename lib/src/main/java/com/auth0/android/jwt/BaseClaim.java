@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The BaseClaim class is a Claim implementation that returns null when any of it's methods it's called.
@@ -52,5 +53,17 @@ class BaseClaim implements Claim {
     @Override
     public <T> List<T> asList(Class<T> tClazz) throws DecodeException {
         return Collections.emptyList();
+    }
+
+    @Nullable
+    @Override
+    public Map<String, Claim> getSubClaims() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Claim getSubClaim(String name) {
+        return null;
     }
 }

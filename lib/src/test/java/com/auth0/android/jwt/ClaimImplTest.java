@@ -15,6 +15,9 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -223,5 +226,64 @@ public class ClaimImplTest {
 
         exception.expect(DecodeException.class);
         claim.asList(UserPojo.class);
+    }
+
+    @Test
+    public void shouldGetSubClaimsValue() throws Exception {
+        Map<String, Object> valueMap = new HashMap<>();
+        valueMap.put("key1", "value1");
+        valueMap.put("key2", "value2");
+        valueMap.put("key3", 1234567);
+
+        Map<String, Object> subValueMap = new HashMap<>();
+        subValueMap.put("key4-1", "value4-1");
+        subValueMap.put("key4-2", "value4-2");
+        subValueMap.put("key4-3", 7654321);
+
+        valueMap.put("key4", subValueMap);
+
+        JsonElement value = gson.toJsonTree(valueMap);
+        ClaimImpl claim = new ClaimImpl(value);
+
+        assertThat(claim.getSubClaims(), is(notNullValue()));
+
+        assertThat(claim.getSubClaim("key1").asString(), is("value1"));
+        assertThat(claim.getSubClaim("key2").asString(), is("value2"));
+        assertThat(claim.getSubClaim("key3").asInt(), is(1234567));
+
+        assertThat(claim.getSubClaim("key4").getSubClaim("key4-1").asString(), is("value4-1"));
+        assertThat(claim.getSubClaim("key4").getSubClaim("key4-2").asString(), is("value4-2"));
+        assertThat(claim.getSubClaim("key4").getSubClaim("key4-3").asInt(), is(7654321));
+        assertThat(claim.getSubClaim("key4").getSubClaim("key4-noExistKey"), is(nullValue()));
+
+        assertThat(claim.getSubClaim("noExistKey"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldGetEmptySubClaimsIfStringValue() throws Exception {
+        JsonElement value = gson.toJsonTree("string1");
+        ClaimImpl claim = new ClaimImpl(value);
+
+        assertThat(claim.getSubClaims(), is(nullValue()));
+        assertThat(claim.getSubClaim("string1"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldGetEmptySubClaimsIfIntValue() throws Exception {
+        JsonElement value = gson.toJsonTree(1234567);
+        ClaimImpl claim = new ClaimImpl(value);
+
+        assertThat(claim.getSubClaims(), is(nullValue()));
+        assertThat(claim.getSubClaim("key1"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldGetEmptySubClaimsIfArrayValue() throws Exception {
+        JsonElement value = gson.toJsonTree(new String[] { "string1", "string2" });
+        ClaimImpl claim = new ClaimImpl(value);
+
+        assertThat(claim.getSubClaims(), is(nullValue()));
+        assertThat(claim.getSubClaim("string1"), is(nullValue()));
+        assertThat(claim.getSubClaim("string2"), is(nullValue()));
     }
 }

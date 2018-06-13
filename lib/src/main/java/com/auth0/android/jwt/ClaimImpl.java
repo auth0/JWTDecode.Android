@@ -6,12 +6,15 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The ClaimImpl class implements the Claim interface.
@@ -20,9 +23,25 @@ import java.util.List;
 class ClaimImpl extends BaseClaim {
 
     private final JsonElement value;
+    private final Map<String, Claim> subClaims;
 
     ClaimImpl(@NonNull JsonElement value) {
         this.value = value;
+
+        subClaims = parseSubClaims();
+    }
+
+    private Map<String, Claim> parseSubClaims() {
+        if (!value.isJsonObject()) {
+            return null;
+        }
+
+        JsonObject jsonObject = value.getAsJsonObject();
+        Map<String, Claim> subClaimMap = new HashMap<>();
+        for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
+            subClaimMap.put(e.getKey(), new ClaimImpl(e.getValue()));
+        }
+        return subClaimMap;
     }
 
     @Override
@@ -105,6 +124,22 @@ class ClaimImpl extends BaseClaim {
             return list;
         } catch (JsonSyntaxException e) {
             throw new DecodeException("Failed to decode claim as list", e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Map<String, Claim> getSubClaims() {
+        return subClaims;
+    }
+
+    @Nullable
+    @Override
+    public Claim getSubClaim(String name) {
+        if (subClaims == null) {
+            return null;
+        } else {
+            return subClaims.get(name);
         }
     }
 }

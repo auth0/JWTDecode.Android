@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Claim class holds the value in a generic way so that it can be recovered in many representations.
@@ -73,4 +74,23 @@ public interface Claim {
      * @throws DecodeException if the values inside the List can't be converted to a class T.
      */
     <T> List<T> asList(Class<T> tClazz) throws DecodeException;
+
+    /**
+     * Get sub claims of this Claim.
+     * If this Claim have not sub claims, null will be returned.
+     *
+     * @return the map of sub claims or null.
+     */
+    @Nullable
+    Map<String, Claim> getSubClaims();
+
+
+    /**
+     * Get sub claim of this Claim by name.
+     * If this Claim have not sub claim with this name, null will be returned.
+     *
+     * @return the sub claim or null.
+     */
+    @Nullable
+    Claim getSubClaim(String name);
 }
