@@ -4,10 +4,10 @@
 [![codecov](https://codecov.io/gh/auth0/JWTDecode.android/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/JWTDecode.android)
 [ ![Download](https://api.bintray.com/packages/auth0/android/jwtdecode/images/download.svg) ](https://bintray.com/auth0/android/jwtdecode/_latestVersion)
 
-Java library with focus on Android that provides Json Web Token (JWT) decoding.
+This Java library with a focus on Android provides JSON Web Token (JWT) decoding.
 
 ## Install
-The library is be available both in Maven Central and JCenter. To start using it add this line to your `build.gradle` dependencies file:
+The library is available both in Maven Central and JCenter. To start using it, add this line to your `build.gradle` dependencies file:
 
 ```groovy
 compile 'com.auth0.android:jwtdecode:1.1.1'
@@ -15,14 +15,14 @@ compile 'com.auth0.android:jwtdecode:1.1.1'
 
 ## Usage
 
-Decode a JWT token
+Decoding a JWT token:
 
 ```java
 String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ";
 JWT jwt = new JWT(token);
 ```
 
-A `DecodeException` will raise with a detailed message if the token has:
+A `DecodeException` will be raised with a detailed message if the token has:
 * An invalid part count.
 * A part not encoded as Base64 + UTF-8.
 * A Header or Payload without a valid JSON format.
@@ -88,7 +88,7 @@ String id = jwt.getId();
 
 #### Time Validation
 
-The JWT token may include DateNumber fields that can be used to validate that the token was issued in a past date `"iat" < TODAY` and that the expiration date is in the future `"exp" > TODAY`. This library includes a method that checks both of this fields and returns the validity of the token. If any of the fields is missing they wont be considered. You must provide a positive amount of seconds as leeway to consider in the Date comparison.
+The JWT token may include DateNumber fields that can be used to validate whether the token was issued in a past date (`"iat" < TODAY`) or whether the expiration date is in the future (`"exp" > TODAY`). This library includes a method that checks both of these fields and returns the validity of the token. If any of the fields are missing they won't be considered. You must provide a positive amount of seconds as leeway, that will be considered in the Date comparison.
 
 ```java
 boolean isExpired = jwt.isExpired(10); // 10 seconds leeway
@@ -115,8 +115,8 @@ The Claim class is a wrapper for the Claim values. It allows you to get the Clai
 #### Collections
 To obtain a Claim as a Collection you'll need to provide the **Class Type** of the contents to convert from.
 
-* **asArray(class)**: Returns the value parsed as an Array of elements of type **Class Type**, or an empty Array if the value isn't an JSON Array.
-* **asList(class)**: Returns the value parsed as a List of elements of type **Class Type**, or an empty List if the value isn't an JSON Array.
+* **asArray(class)**: Returns the value parsed as an Array of elements of type **Class Type**, or an empty Array if the value isn't a JSON Array.
+* **asList(class)**: Returns the value parsed as a List of elements of type **Class Type**, or an empty List if the value isn't a JSON Array.
 
 If the values inside the JSON Array can't be converted to the given **Class Type**, a `DecodeException` will raise.
 
@@ -140,7 +140,7 @@ JWT jwt = (JWT) getIntent().getParcelableExtra("jwt");
 
 #### toString
 
-You can also call at any time `jwt.toString()` to get the String representation of the token that has given instance to this JWT. This is useful for instance if you need to validate some claims when you get a response, and then send the token back in the request header.
+You can also call at any time `jwt.toString()` to get the String representation of the token that has instantiated this JWT. This is useful for instance if you need to validate some claims when you get a response and then send the token back in the request header.
 
 ```java
 JWT jwt = new JWT(res.getHeader("Authorization"));
@@ -160,8 +160,8 @@ Auth0 helps you to:
 * Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, among others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
 * Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
 * Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
-* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
-* Analytics of how, when and where users are logging in.
+* Support for generating signed [JSON Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
+* Analytics on how, when and where users are logging in.
 * Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
 
 ## Create a free account in Auth0
