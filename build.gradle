@@ -3,15 +3,11 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-        classpath 'gradle.plugin.com.auth0.gradle:oss-library:0.6.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
@@ -19,6 +15,7 @@ allprojects {
     group = 'com.auth0.android'
     repositories {
         jcenter()
+        google()
     }
 }
 
