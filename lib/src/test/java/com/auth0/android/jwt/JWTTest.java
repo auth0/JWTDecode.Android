@@ -94,6 +94,13 @@ public class JWTTest {
         assertThat(jwt.getSignature(), is("XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ"));
     }
 
+    @Test
+    public void shouldGetEmptySignature() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.");
+        assertThat(jwt, is(notNullValue()));
+        assertThat(jwt.getSignature(), is(""));
+    }
+
     // Public Claims
 
     @Test
