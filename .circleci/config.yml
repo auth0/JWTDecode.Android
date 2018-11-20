@@ -5,7 +5,7 @@ jobs:
       GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"
       _JAVA_OPTIONS: -Xms512m -Xmx1024m
     docker:
-      - image: circleci/android:api-25-alpha
+      - image: circleci/android:api-28-alpha
 
     steps:
     - checkout
@@ -25,4 +25,4 @@ jobs:
     - run:
           name: Upload Coverage
           when: on_success
-          command: bash <(curl -s https://codecov.io/bash)
+          command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
