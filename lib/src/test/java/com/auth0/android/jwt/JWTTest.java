@@ -359,6 +359,29 @@ public class JWTTest {
         assertThat(jwt.getClaim("object"), is(instanceOf(ClaimImpl.class)));
     }
 
+    @Test
+    public void shouldGetAllClaims() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifSwiZXh0cmEiOiJoZWFkcGhvbmVzIn0.fTvEXzqPfKZZkHcNtXrIWlSuH2bWegFjir6KFRFXnNk");
+        assertThat(jwt, is(notNullValue()));
+        Map<String, Claim> claims = jwt.getClaims();
+        assertThat(claims, is(notNullValue()));
+        Claim objectClaim = claims.get("object");
+        assertThat(objectClaim, is(notNullValue()));
+        assertThat(objectClaim, is(instanceOf(ClaimImpl.class)));
+        Claim extraClaim = claims.get("extra");
+        assertThat(extraClaim, is(notNullValue()));
+        assertThat(extraClaim.asString(), is("headphones"));
+    }
+
+    @Test
+    public void shouldGetEmptyAllClaims() throws Exception {
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdWJqZWN0IG5hbWVkIGpvaG4ifQ.0ZwlkMmFbXptrntKDw-uF0RCaAz7RNIgtz9BwNBzMEw");
+        assertThat(jwt, is(notNullValue()));
+        Map<String, Claim> claims = jwt.getClaims();
+        assertThat(claims, is(notNullValue()));
+        assertThat(claims.isEmpty(), is(true));
+    }
+
     //Parcelable
 
     @Test

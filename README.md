@@ -121,6 +121,12 @@ Additional Claims defined in the token can be obtained by calling `getClaim` and
 Claim claim = jwt.getClaim("isAdmin");
 ```
 
+You can also obtain all the claims at once by calling `getClaims`.
+
+```java
+Map<String, Claim> allClaims = jwt.getClaims();
+```
+
 ### Claim Class
 The Claim class is a wrapper for the Claim values. It allows you to get the Claim as different class types. The available helpers are:
 

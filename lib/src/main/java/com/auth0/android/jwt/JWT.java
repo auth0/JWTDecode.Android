@@ -143,6 +143,16 @@ public class JWT implements Parcelable {
     }
 
     /**
+     * Get all the Private Claims.
+     *
+     * @return a valid Map of Claims.
+     */
+    @NonNull
+    public Map<String, Claim> getClaims() {
+        return payload.tree;
+    }
+
+    /**
      * Validates that this JWT was issued in the past and hasn't expired yet.
      *
      * @param leeway the time leeway in seconds in which the token should still be considered valid.
