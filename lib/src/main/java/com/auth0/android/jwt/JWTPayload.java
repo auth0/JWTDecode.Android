@@ -1,5 +1,6 @@
 package com.auth0.android.jwt;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ class JWTPayload {
     final Date iat;
     final String jti;
     final List<String> aud;
-    private final  Map<String, Claim> tree;
+    final Map<String, Claim> tree;
 
     JWTPayload(String iss, String sub, Date exp, Date nbf, Date iat, String jti, List<String> aud, Map<String, Claim> tree) {
         this.iss = iss;
@@ -23,7 +24,7 @@ class JWTPayload {
         this.iat = iat;
         this.jti = jti;
         this.aud = aud;
-        this.tree = tree;
+        this.tree = Collections.unmodifiableMap(tree);
     }
 
     Claim claimForName(String name) {

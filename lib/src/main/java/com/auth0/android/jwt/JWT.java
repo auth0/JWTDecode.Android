@@ -132,7 +132,7 @@ public class JWT implements Parcelable {
     }
 
     /**
-     * Get a Private Claim given it's name. If the Claim wasn't specified in the JWT payload, a BaseClaim will be returned.
+     * Get a Claim given it's name. If the Claim wasn't specified in the JWT payload, a BaseClaim will be returned.
      *
      * @param name the name of the Claim to retrieve.
      * @return a valid Claim.
@@ -140,6 +140,16 @@ public class JWT implements Parcelable {
     @NonNull
     public Claim getClaim(@NonNull String name) {
         return payload.claimForName(name);
+    }
+
+    /**
+     * Get all the Claims.
+     *
+     * @return a valid Map of Claims.
+     */
+    @NonNull
+    public Map<String, Claim> getClaims() {
+        return payload.tree;
     }
 
     /**
