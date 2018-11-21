@@ -14,14 +14,15 @@ jobs:
         keys:
         - v1-dep-{{ .Branch }}-
     
-    - save_cache:
-        key: v1-dep-{{ .Branch }}-{{ epoch }}
-        paths:
-        - ~/.gradle
-        - ~/.android
-        - /usr/local/android-sdk-linux/extras
-    
     - run: ./gradlew clean test jacocoTestReport --continue --console=plain
+
+    - save_cache:
+            key: v1-dep-{{ .Branch }}-{{ epoch }}
+            paths:
+            - ~/.gradle
+            - ~/.android
+            - /usr/local/android-sdk-linux/extras
+
     - run:
           name: Upload Coverage
           when: on_success
