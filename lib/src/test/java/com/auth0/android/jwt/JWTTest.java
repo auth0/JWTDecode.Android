@@ -361,21 +361,21 @@ public class JWTTest {
 
     @Test
     public void shouldGetAllClaims() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifSwiZXh0cmEiOiJoZWFkcGhvbmVzIn0.fTvEXzqPfKZZkHcNtXrIWlSuH2bWegFjir6KFRFXnNk");
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifSwic3ViIjoiYXV0aDAifQ.U20MgOAV81c54mRelwYDJiLllb5OVwUAtMGn-eUOpTA");
         assertThat(jwt, is(notNullValue()));
         Map<String, Claim> claims = jwt.getClaims();
         assertThat(claims, is(notNullValue()));
         Claim objectClaim = claims.get("object");
         assertThat(objectClaim, is(notNullValue()));
         assertThat(objectClaim, is(instanceOf(ClaimImpl.class)));
-        Claim extraClaim = claims.get("extra");
+        Claim extraClaim = claims.get("sub");
         assertThat(extraClaim, is(notNullValue()));
-        assertThat(extraClaim.asString(), is("headphones"));
+        assertThat(extraClaim.asString(), is("auth0"));
     }
 
     @Test
     public void shouldGetEmptyAllClaims() throws Exception {
-        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdWJqZWN0IG5hbWVkIGpvaG4ifQ.0ZwlkMmFbXptrntKDw-uF0RCaAz7RNIgtz9BwNBzMEw");
+        JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo");
         assertThat(jwt, is(notNullValue()));
         Map<String, Claim> claims = jwt.getClaims();
         assertThat(claims, is(notNullValue()));
