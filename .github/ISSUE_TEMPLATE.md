@@ -13,7 +13,7 @@ Description of the bug or feature request and why it's a problem. Consider inclu
 
 [ ] I have checked the [Auth0 Community](https://community.auth0.com/) for related posts.
 
-[ ] I have checked for related or duplicate [Issues](https://github.com/auth0/REPO-NAME/issues) and [PRs](https://github.com/auth0/REPO-NAME/pulls).
+[ ] I have checked for related or duplicate [Issues](https://github.com/auth0/JWTDecode.Android/issues) and [PRs](https://github.com/auth0/JWTDecode.Android/pulls).
 
 [ ] I have read the [Auth0 general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md).
 
