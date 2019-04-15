@@ -30,6 +30,11 @@ public class BaseClaimTest {
     }
 
     @Test
+    public void shouldGetAsLong() throws Exception {
+        assertThat(claim.asLong(), is(nullValue()));
+    }
+
+    @Test
     public void shouldGetAsDouble() throws Exception {
         assertThat(claim.asDouble(), is(nullValue()));
     }

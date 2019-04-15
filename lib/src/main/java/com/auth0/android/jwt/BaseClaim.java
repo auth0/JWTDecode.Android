@@ -27,6 +27,10 @@ class BaseClaim implements Claim {
 
     @Nullable
     @Override
+    public Long asLong() { return null; }
+
+    @Nullable
+    @Override
     public Double asDouble() {
         return null;
     }

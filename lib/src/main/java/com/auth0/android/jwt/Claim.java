@@ -30,6 +30,15 @@ public interface Claim {
     Integer asInt();
 
     /**
+     * Get this Claim as an Long.
+     * If the value isn't of type Long or it can't be converted to an Long, null will be returned.
+     *
+     * @return the value as an Long or null.
+     */
+    @Nullable
+    Long asLong();
+
+    /**
      * Get this Claim as a Double.
      * If the value isn't of type Double or it can't be converted to a Double, null will be returned.
      *

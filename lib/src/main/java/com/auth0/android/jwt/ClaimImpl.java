@@ -45,6 +45,15 @@ class ClaimImpl extends BaseClaim {
 
     @Override
     @Nullable
+    public Long asLong() {
+        if (!value.isJsonPrimitive()) {
+            return null;
+        }
+        return value.getAsLong();
+    }
+
+    @Override
+    @Nullable
     public Double asDouble() {
         if (!value.isJsonPrimitive()) {
             return null;
