@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.0](https://github.com/auth0/jwtdecode.android/tree/1.3.0) (2019-04-17)
+[Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.2.0...1.3.0)
+
+**Added**
+- Add Claim asLong support. [\#35](https://github.com/auth0/JWTDecode.Android/pull/35) ([chenjiancan](https://github.com/chenjiancan))
+
 ## [1.2.0](https://github.com/auth0/jwtdecode.android/tree/1.2.0) (2018-11-21)
 [Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.1.1...1.2.0)
 
