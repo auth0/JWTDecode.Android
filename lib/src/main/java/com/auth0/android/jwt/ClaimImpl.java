@@ -116,4 +116,16 @@ class ClaimImpl extends BaseClaim {
             throw new DecodeException("Failed to decode claim as list", e);
         }
     }
+
+    @Override
+    public <T> T asObject(Class<T> tClazz) throws DecodeException {
+        try {
+            if (!value.isJsonObject() || value.isJsonNull()) {
+                return null;
+            }
+            return new Gson().fromJson(value, tClazz);
+        } catch (JsonSyntaxException e) {
+            throw new DecodeException("Failed to decode claim as Object", e);
+        }
+    }
 }

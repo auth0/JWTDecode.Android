@@ -57,4 +57,10 @@ class BaseClaim implements Claim {
     public <T> List<T> asList(Class<T> tClazz) throws DecodeException {
         return Collections.emptyList();
     }
+
+    @Nullable
+    @Override
+    public <T> T asObject(Class<T> tClazz) throws DecodeException {
+        return null;
+    }
 }

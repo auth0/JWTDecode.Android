@@ -241,4 +241,27 @@ public class ClaimImplTest {
         exception.expect(DecodeException.class);
         claim.asList(UserPojo.class);
     }
+
+    @Test
+    public void shouldGetSubClaimsObject() throws Exception {
+        String username = "Sabin";
+
+        SubClaimsPojo data = new SubClaimsPojo();
+        data.setUsername(username);
+
+        JsonElement value = gson.toJsonTree(data);
+
+        ClaimImpl claim = new ClaimImpl(value);
+        SubClaimsPojo object = claim.asObject(SubClaimsPojo.class);
+
+        assertThat(object.getUsername(), is(username));
+    }
+
+    @Test
+    public void shouldGetNullIfSubClaimsIsNotAnObject() throws Exception {
+        JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
+        ClaimImpl claim = new ClaimImpl(value);
+
+        assertThat(claim.asObject(SubClaimsPojo.class), is(nullValue()));
+    }
 }
