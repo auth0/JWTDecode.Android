@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -243,25 +244,41 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetSubClaimsObject() throws Exception {
-        String username = "Sabin";
-
-        SubClaimsPojo data = new SubClaimsPojo();
-        data.setUsername(username);
-
+    public void shouldGetAsObject() throws Exception {
+        UserPojo data = new UserPojo("George", 1);
         JsonElement value = gson.toJsonTree(data);
-
         ClaimImpl claim = new ClaimImpl(value);
-        SubClaimsPojo object = claim.asObject(SubClaimsPojo.class);
 
-        assertThat(object.getUsername(), is(username));
+        JsonElement value2 = gson.toJsonTree(1);
+        ClaimImpl claim2 = new ClaimImpl(value2);
+
+        JsonElement value3 = gson.toJsonTree(true);
+        ClaimImpl claim3 = new ClaimImpl(value3);
+
+        assertThat(claim.asObject(UserPojo.class), is(notNullValue()));
+        assertThat(claim.asObject(UserPojo.class), is(new UserPojo("George", 1)));
+
+        assertThat(claim2.asObject(Integer.class), is(notNullValue()));
+        assertThat(claim2.asObject(Integer.class), is(1));
+
+        assertThat(claim3.asObject(Boolean.class), is(notNullValue()));
+        assertThat(claim3.asObject(Boolean.class), is(true));
     }
 
     @Test
-    public void shouldGetNullIfSubClaimsIsNotAnObject() throws Exception {
-        JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
+    public void shouldGetNullObjectIfNullValue() throws Exception {
+        JsonElement value = gson.toJsonTree(null);
         ClaimImpl claim = new ClaimImpl(value);
 
-        assertThat(claim.asObject(SubClaimsPojo.class), is(nullValue()));
+        assertThat(claim.asObject(UserPojo.class), is(nullValue()));
+    }
+
+    @Test
+    public void shouldThrowIfJsonSyntaxMalformed() throws Exception {
+        JsonElement value = gson.toJsonTree(1);
+        ClaimImpl claim = new ClaimImpl(value);
+
+        exception.expect(DecodeException.class);
+        claim.asObject(UserPojo.class);
     }
 }
