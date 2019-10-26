@@ -15,7 +15,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
