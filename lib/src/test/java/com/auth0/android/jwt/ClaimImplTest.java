@@ -274,7 +274,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldThrowIfJsonSyntaxMalformed() throws Exception {
+    public void shouldThrowIfObjectClassMismatch() throws Exception {
         JsonElement value = gson.toJsonTree(1);
         ClaimImpl claim = new ClaimImpl(value);
 
