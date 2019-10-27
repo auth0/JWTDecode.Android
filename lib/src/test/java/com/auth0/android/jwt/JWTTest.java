@@ -2,7 +2,7 @@ package com.auth0.android.jwt;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Base64;
 
 import org.hamcrest.collection.IsEmptyCollection;
