@@ -245,23 +245,23 @@ public class ClaimImplTest {
     @Test
     public void shouldGetAsObject() throws Exception {
         UserPojo data = new UserPojo("George", 1);
-        JsonElement value = gson.toJsonTree(data);
-        ClaimImpl claim = new ClaimImpl(value);
+        JsonElement userValue = gson.toJsonTree(data);
+        ClaimImpl userClaim = new ClaimImpl(userValue);
 
-        JsonElement value2 = gson.toJsonTree(1);
-        ClaimImpl claim2 = new ClaimImpl(value2);
+        JsonElement intValue = gson.toJsonTree(1);
+        ClaimImpl intClaim = new ClaimImpl(intValue);
 
-        JsonElement value3 = gson.toJsonTree(true);
-        ClaimImpl claim3 = new ClaimImpl(value3);
+        JsonElement booleanValue = gson.toJsonTree(true);
+        ClaimImpl booleanClaim = new ClaimImpl(booleanValue);
 
-        assertThat(claim.asObject(UserPojo.class), is(notNullValue()));
-        assertThat(claim.asObject(UserPojo.class), is(new UserPojo("George", 1)));
+        assertThat(userClaim.asObject(UserPojo.class), is(notNullValue()));
+        assertThat(userClaim.asObject(UserPojo.class), is(new UserPojo("George", 1)));
 
-        assertThat(claim2.asObject(Integer.class), is(notNullValue()));
-        assertThat(claim2.asObject(Integer.class), is(1));
+        assertThat(intClaim.asObject(Integer.class), is(notNullValue()));
+        assertThat(intClaim.asObject(Integer.class), is(1));
 
-        assertThat(claim3.asObject(Boolean.class), is(notNullValue()));
-        assertThat(claim3.asObject(Boolean.class), is(true));
+        assertThat(booleanClaim.asObject(Boolean.class), is(notNullValue()));
+        assertThat(booleanClaim.asObject(Boolean.class), is(true));
     }
 
     @Test
