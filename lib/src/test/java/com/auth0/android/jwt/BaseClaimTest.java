@@ -61,4 +61,8 @@ public class BaseClaimTest {
         assertThat(claim.asList(Object.class), is(empty()));
     }
 
+    @Test
+    public void shouldGetAsObject() throws Exception {
+        assertThat(claim.asObject(Object.class), is(nullValue()));
+    }
 }

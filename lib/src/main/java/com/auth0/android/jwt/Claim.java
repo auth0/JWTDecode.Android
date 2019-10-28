@@ -82,4 +82,14 @@ public interface Claim {
      * @throws DecodeException if the values inside the List can't be converted to a class T.
      */
     <T> List<T> asList(Class<T> tClazz) throws DecodeException;
+
+    /**
+     * Get this Claim as a Object of type T.
+     * If the value isn't of type Object, null will be returned.
+     *
+     * @return the value as a Object of type T or null.
+     * @throws DecodeException if the value can't be converted to a class T.
+     */
+    @Nullable
+    <T> T asObject(Class<T> tClazz) throws DecodeException;
 }

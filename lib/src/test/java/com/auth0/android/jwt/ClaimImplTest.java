@@ -241,4 +241,43 @@ public class ClaimImplTest {
         exception.expect(DecodeException.class);
         claim.asList(UserPojo.class);
     }
+
+    @Test
+    public void shouldGetAsObject() throws Exception {
+        UserPojo data = new UserPojo("George", 1);
+        JsonElement userValue = gson.toJsonTree(data);
+        ClaimImpl userClaim = new ClaimImpl(userValue);
+
+        JsonElement intValue = gson.toJsonTree(1);
+        ClaimImpl intClaim = new ClaimImpl(intValue);
+
+        JsonElement booleanValue = gson.toJsonTree(true);
+        ClaimImpl booleanClaim = new ClaimImpl(booleanValue);
+
+        assertThat(userClaim.asObject(UserPojo.class), is(notNullValue()));
+        assertThat(userClaim.asObject(UserPojo.class), is(new UserPojo("George", 1)));
+
+        assertThat(intClaim.asObject(Integer.class), is(notNullValue()));
+        assertThat(intClaim.asObject(Integer.class), is(1));
+
+        assertThat(booleanClaim.asObject(Boolean.class), is(notNullValue()));
+        assertThat(booleanClaim.asObject(Boolean.class), is(true));
+    }
+
+    @Test
+    public void shouldGetNullObjectIfNullValue() throws Exception {
+        JsonElement value = gson.toJsonTree(null);
+        ClaimImpl claim = new ClaimImpl(value);
+
+        assertThat(claim.asObject(UserPojo.class), is(nullValue()));
+    }
+
+    @Test
+    public void shouldThrowIfObjectClassMismatch() throws Exception {
+        JsonElement value = gson.toJsonTree(1);
+        ClaimImpl claim = new ClaimImpl(value);
+
+        exception.expect(DecodeException.class);
+        claim.asObject(UserPojo.class);
+    }
 }
