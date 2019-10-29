@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.4.0](https://github.com/auth0/jwtdecode.android/tree/1.4.0) (2019-10-28)
+[Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.3.0...1.4.0)
+
+**Added**
+- Add asObject(Class<T> tClazz) to convert claims to object of type "T" [\#41](https://github.com/auth0/JWTDecode.Android/pull/41) ([sabinbajracharya](https://github.com/sabinbajracharya))
+
 ## [1.3.0](https://github.com/auth0/jwtdecode.android/tree/1.3.0) (2019-04-17)
 [Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.2.0...1.3.0)
 
