@@ -1,8 +1,17 @@
 package com.auth0.android.jwt;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.junit.Assert.assertThat;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-
+import java.util.Arrays;
+import java.util.Date;
 import org.hamcrest.collection.IsArrayWithSize;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
@@ -13,19 +22,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
-import java.util.Date;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.assertThat;
-import static org.mockito.MockitoAnnotations.initMocks;
-
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
+@Config(sdk = 23)
 public class ClaimImplTest {
 
     Gson gson;

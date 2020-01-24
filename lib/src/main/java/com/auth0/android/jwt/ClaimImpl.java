@@ -1,13 +1,11 @@
 package com.auth0.android.jwt;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
