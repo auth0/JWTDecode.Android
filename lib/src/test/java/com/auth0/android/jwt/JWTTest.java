@@ -1,24 +1,5 @@
 package com.auth0.android.jwt;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.support.annotation.Nullable;
-import android.util.Base64;
-
-import org.hamcrest.collection.IsEmptyCollection;
-import org.hamcrest.core.IsCollectionContaining;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -30,8 +11,25 @@ import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.support.annotation.Nullable;
+import android.util.Base64;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Map;
+import org.hamcrest.collection.IsEmptyCollection;
+import org.hamcrest.core.IsCollectionContaining;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
+@Config(sdk = 23)
 public class JWTTest {
 
     private static final String CHARSET_UTF_8 = "UTF-8";
@@ -438,10 +436,7 @@ public class JWTTest {
     private String encodeString(String source) {
         byte[] bytes = Base64.encode(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
         String res = "";
-        try {
-            res = new String(bytes, CHARSET_UTF_8);
-        } catch (UnsupportedEncodingException ignored) {
-        }
+        res = new String(bytes, StandardCharsets.UTF_8);
         return res;
     }
 
