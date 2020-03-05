@@ -42,6 +42,7 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         return new JWTPayload(iss, sub, exp, nbf, iat, jti, aud, extra);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private List<String> getStringOrArray(JsonObject obj, String claimName) {
         List<String> list = Collections.emptyList();
         if (obj.has(claimName)) {

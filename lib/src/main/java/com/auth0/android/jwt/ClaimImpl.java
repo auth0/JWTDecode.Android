@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * The ClaimImpl class implements the Claim interface.
  */
-@SuppressWarnings("WeakerAccess")
 class ClaimImpl extends BaseClaim {
 
     private final JsonElement value;
