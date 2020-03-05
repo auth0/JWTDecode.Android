@@ -1,17 +1,8 @@
 package com.auth0.android.jwt;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.assertThat;
-import static org.mockito.MockitoAnnotations.initMocks;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import java.util.Arrays;
-import java.util.Date;
+
 import org.hamcrest.collection.IsArrayWithSize;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
@@ -22,22 +13,33 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
+import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsArrayContainingInOrder.arrayContaining;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 23)
 public class ClaimImplTest {
 
-    Gson gson;
+    private Gson gson;
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         initMocks(this);
         gson = new Gson();
     }
 
     @Test
-    public void shouldGetBooleanValue() throws Exception {
+    public void shouldGetBooleanValue() {
         JsonElement value = gson.toJsonTree(true);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -46,7 +48,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullBooleanIfNotPrimitiveValue() throws Exception {
+    public void shouldGetNullBooleanIfNotPrimitiveValue() {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -54,7 +56,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetIntValue() throws Exception {
+    public void shouldGetIntValue() {
         JsonElement value = gson.toJsonTree(123);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -63,7 +65,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetLongValue() throws Exception {
+    public void shouldGetLongValue() {
         JsonElement value = gson.toJsonTree(123L);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -72,7 +74,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullIntIfNotPrimitiveValue() throws Exception {
+    public void shouldGetNullIntIfNotPrimitiveValue() {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -80,7 +82,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullLongIfNotPrimitiveValue() throws Exception {
+    public void shouldGetNullLongIfNotPrimitiveValue() {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -88,7 +90,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetDoubleValue() throws Exception {
+    public void shouldGetDoubleValue() {
         JsonElement value = gson.toJsonTree(1.5);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -97,7 +99,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullDoubleIfNotPrimitiveValue() throws Exception {
+    public void shouldGetNullDoubleIfNotPrimitiveValue() {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -105,7 +107,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetLargeDateValue() throws Exception {
+    public void shouldGetLargeDateValue() {
         long seconds = Integer.MAX_VALUE + 10000L;
         JsonElement value = gson.toJsonTree(seconds);
         ClaimImpl claim = new ClaimImpl(value);
@@ -117,7 +119,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetDateValue() throws Exception {
+    public void shouldGetDateValue() {
         JsonElement value = gson.toJsonTree("1476824844");
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -126,7 +128,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullDateIfNotPrimitiveValue() throws Exception {
+    public void shouldGetNullDateIfNotPrimitiveValue() {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -134,7 +136,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetStringValue() throws Exception {
+    public void shouldGetStringValue() {
         JsonElement value = gson.toJsonTree("string");
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -143,7 +145,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullStringIfNotPrimitiveValue() throws Exception {
+    public void shouldGetNullStringIfNotPrimitiveValue() {
         JsonElement value = gson.toJsonTree(new Object());
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -151,7 +153,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetArrayValueOfCustomClass() throws Exception {
+    public void shouldGetArrayValueOfCustomClass() {
         JsonElement value = gson.toJsonTree(new UserPojo[]{new UserPojo("George", 1), new UserPojo("Mark", 2)});
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -160,7 +162,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetArrayValue() throws Exception {
+    public void shouldGetArrayValue() {
         JsonElement value = gson.toJsonTree(new String[]{"string1", "string2"});
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -169,7 +171,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetEmptyArrayIfNullValue() throws Exception {
+    public void shouldGetEmptyArrayIfNullValue() {
         JsonElement value = gson.toJsonTree(null);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -178,7 +180,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetEmptyArrayIfNonArrayValue() throws Exception {
+    public void shouldGetEmptyArrayIfNonArrayValue() {
         JsonElement value = gson.toJsonTree(1);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -187,7 +189,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldThrowIfArrayClassMismatch() throws Exception {
+    public void shouldThrowIfArrayClassMismatch() {
         JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -196,7 +198,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetListValueOfCustomClass() throws Exception {
+    public void shouldGetListValueOfCustomClass() {
         JsonElement value = gson.toJsonTree(Arrays.asList(new UserPojo("George", 1), new UserPojo("Mark", 2)));
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -205,7 +207,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetListValue() throws Exception {
+    public void shouldGetListValue() {
         JsonElement value = gson.toJsonTree(Arrays.asList("string1", "string2"));
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -214,7 +216,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetEmptyListIfNullValue() throws Exception {
+    public void shouldGetEmptyListIfNullValue() {
         JsonElement value = gson.toJsonTree(null);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -223,7 +225,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetEmptyListIfNonArrayValue() throws Exception {
+    public void shouldGetEmptyListIfNonArrayValue() {
         JsonElement value = gson.toJsonTree(1);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -232,7 +234,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldThrowIfListClassMismatch() throws Exception {
+    public void shouldThrowIfListClassMismatch() {
         JsonElement value = gson.toJsonTree(new String[]{"keys", "values"});
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -241,7 +243,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetAsObject() throws Exception {
+    public void shouldGetAsObject() {
         UserPojo data = new UserPojo("George", 1);
         JsonElement userValue = gson.toJsonTree(data);
         ClaimImpl userClaim = new ClaimImpl(userValue);
@@ -263,7 +265,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldGetNullObjectIfNullValue() throws Exception {
+    public void shouldGetNullObjectIfNullValue() {
         JsonElement value = gson.toJsonTree(null);
         ClaimImpl claim = new ClaimImpl(value);
 
@@ -271,7 +273,7 @@ public class ClaimImplTest {
     }
 
     @Test
-    public void shouldThrowIfObjectClassMismatch() throws Exception {
+    public void shouldThrowIfObjectClassMismatch() {
         JsonElement value = gson.toJsonTree(1);
         ClaimImpl claim = new ClaimImpl(value);
 

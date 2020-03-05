@@ -3,13 +3,16 @@ package com.auth0.android.jwt;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Base64;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import java.io.UnsupportedEncodingException;
+
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +24,6 @@ import java.util.Map;
 public class JWT implements Parcelable {
 
     private static final String TAG = JWT.class.getSimpleName();
-    private static final String ENCODING_UTF_8 = "UTF-8";
     private final String token;
 
     private Map<String, String> header;
@@ -161,8 +163,8 @@ public class JWT implements Parcelable {
             throw new IllegalArgumentException("The leeway must be a positive value.");
         }
         long todayTime = (long) (Math.floor(new Date().getTime() / 1000) * 1000); //truncate millis
-        Date futureToday = new Date((todayTime + leeway * 1000));
-        Date pastToday = new Date((todayTime - leeway * 1000));
+        Date futureToday = new Date(todayTime + leeway * 1000);
+        Date pastToday = new Date(todayTime - leeway * 1000);
         boolean expValid = payload.exp == null || !pastToday.after(payload.exp);
         boolean iatValid = payload.iat == null || !futureToday.before(payload.iat);
         return !expValid || !iatValid;
@@ -230,11 +232,9 @@ public class JWT implements Parcelable {
         String decoded;
         try {
             byte[] bytes = Base64.decode(string, Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
-            decoded = new String(bytes, ENCODING_UTF_8);
+            decoded = new String(bytes, Charset.defaultCharset());
         } catch (IllegalArgumentException e) {
             throw new DecodeException("Received bytes didn't correspond to a valid Base64 encoded string.", e);
-        } catch (UnsupportedEncodingException e) {
-            throw new DecodeException("Device doesn't support UTF-8 charset encoding.", e);
         }
         return decoded;
     }
