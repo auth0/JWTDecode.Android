@@ -1,8 +1,6 @@
 package com.auth0.android.jwt;
 
-
-import android.support.annotation.Nullable;
-
+import androidx.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.Date;

@@ -1,25 +1,28 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
+plugins {
+    id 'lifecycle-base'
+}
+
 allprojects {
     group = 'com.auth0.android'
+
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.named("clean").configure {
     delete 'CHANGELOG.md.release'
 }

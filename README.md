@@ -10,7 +10,7 @@ Java library with focus on Android that provides Json Web Token (JWT) decoding.
 The library is be available both in Maven Central and JCenter. To start using it add this line to your `build.gradle` dependencies file:
 
 ```groovy
-implementation 'com.auth0.android:jwtdecode:1.4.0'
+implementation 'com.auth0.android:jwtdecode:2.0.0'
 ```
 
 ## Usage
@@ -26,26 +26,6 @@ A `DecodeException` will raise with a detailed message if the token has:
 * An invalid part count.
 * A part not encoded as Base64 + UTF-8.
 * A Header or Payload without a valid JSON format.
-
-
-#### Android SDK Versions Troubleshooting
-Those using this library from version `1.2.0` and up should start targeting latest android SDK versions, as [recommended by Google](https://developer.android.com/distribute/best-practices/develop/target-sdk). Those running into conflicts because of different `com.android.support` libraries versions can choose to use latest release `28.0.0` or exclude the ones required by this library and require a different version in their app's `build.gradle` file as shown below:
-
- e.g. if choosing an older version such as `25.4.0`
-
-```groovy
-apply plugin: 'com.android.application'
- android {
-    //...
- }
- dependencies {
-    implementation ('com.auth0.android:jwtdecode:1.2.0'){
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    //...
-}
-```
 
 ### Registered Claims
 

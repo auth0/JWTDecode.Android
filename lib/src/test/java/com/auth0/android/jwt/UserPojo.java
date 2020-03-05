@@ -1,10 +1,12 @@
 package com.auth0.android.jwt;
 
-public class UserPojo {
-    String name;
-    int id;
+import java.util.Objects;
 
-    public UserPojo(String name, int id) {
+class UserPojo {
+    private String name;
+    private int id;
+
+    UserPojo(String name, int id) {
         this.name = name;
         this.id = id;
     }
@@ -17,6 +19,6 @@ public class UserPojo {
         UserPojo userPojo = (UserPojo) o;
 
         if (id != userPojo.id) return false;
-        return name != null ? name.equals(userPojo.name) : userPojo.name == null;
+        return Objects.equals(name, userPojo.name);
     }
 }

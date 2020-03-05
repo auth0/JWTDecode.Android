@@ -7,7 +7,6 @@ import android.util.Base64;
 
 import org.hamcrest.collection.IsEmptyCollection;
 import org.hamcrest.core.IsCollectionContaining;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Map;
 
@@ -31,38 +30,36 @@ import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23)
+@Config(sdk = 23)
 public class JWTTest {
-
-    private static final String CHARSET_UTF_8 = "UTF-8";
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     // Exceptions
     @Test
-    public void shouldThrowIfLessThan3Parts() throws Exception {
+    public void shouldThrowIfLessThan3Parts() {
         exception.expect(DecodeException.class);
         exception.expectMessage("The token was expected to have 3 parts, but got 2.");
         new JWT("two.parts");
     }
 
     @Test
-    public void shouldThrowIfMoreThan3Parts() throws Exception {
+    public void shouldThrowIfMoreThan3Parts() {
         exception.expect(DecodeException.class);
         exception.expectMessage("The token was expected to have 3 parts, but got 4.");
         new JWT("this.has.four.parts");
     }
 
     @Test
-    public void shouldThrowIfItsNotBase64Encoded() throws Exception {
+    public void shouldThrowIfItsNotBase64Encoded() {
         exception.expect(DecodeException.class);
         exception.expectMessage("Received bytes didn't correspond to a valid Base64 encoded string.");
         new JWT("thisIsNot.Base64_Enc.oded");
     }
 
     @Test
-    public void shouldThrowIfPayloadHasInvalidJSONFormat() throws Exception {
+    public void shouldThrowIfPayloadHasInvalidJSONFormat() {
         exception.expect(DecodeException.class);
         exception.expectMessage("The token's payload had an invalid JSON format.");
         new JWT("eyJhbGciOiJIUzI1NiJ9.e30ijfe923.XmNK3GpH3Ys_7lyQ");
@@ -70,7 +67,7 @@ public class JWTTest {
 
     // toString
     @Test
-    public void shouldGetStringToken() throws Exception {
+    public void shouldGetStringToken() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.toString(), is(notNullValue()));
@@ -80,7 +77,7 @@ public class JWTTest {
     // Parts
 
     @Test
-    public void shouldGetHeader() throws Exception {
+    public void shouldGetHeader() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getHeader(), is(instanceOf(Map.class)));
@@ -88,14 +85,14 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetSignature() throws Exception {
+    public void shouldGetSignature() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getSignature(), is("XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ"));
     }
 
     @Test
-    public void shouldGetEmptySignature() throws Exception {
+    public void shouldGetEmptySignature() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getSignature(), is(""));
@@ -104,37 +101,37 @@ public class JWTTest {
     // Public Claims
 
     @Test
-    public void shouldGetIssuer() throws Exception {
+    public void shouldGetIssuer() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKb2huIERvZSJ9.SgXosfRR_IwCgHq5lF3tlM-JHtpucWCRSaVuoHTbWbQ");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getIssuer(), is("John Doe"));
     }
 
     @Test
-    public void shouldGetNullIssuerIfMissing() throws Exception {
+    public void shouldGetNullIssuerIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getIssuer(), is(nullValue()));
+        assertThat(jwt.getIssuer(), is(nullValue()));
     }
 
     @Test
-    public void shouldGetSubject() throws Exception {
+    public void shouldGetSubject() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUb2szbnMifQ.RudAxkslimoOY3BLl2Ghny3BrUKu9I1ZrXzCZGDJtNs");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getSubject(), is("Tok3ns"));
     }
 
     @Test
-    public void shouldGetNullSubjectIfMissing() throws Exception {
+    public void shouldGetNullSubjectIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getSubject(), is(nullValue()));
+        assertThat(jwt.getSubject(), is(nullValue()));
     }
 
     @Test
-    public void shouldGetArrayAudience() throws Exception {
+    public void shouldGetArrayAudience() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiSG9wZSIsIlRyYXZpcyIsIlNvbG9tb24iXX0.Tm4W8WnfPjlmHSmKFakdij0on2rWPETpoM7Sh0u6-S4");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getAudience(), is(hasSize(3)));
@@ -142,7 +139,7 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetStringAudience() throws Exception {
+    public void shouldGetStringAudience() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJKYWNrIFJleWVzIn0.a4I9BBhPt1OB1GW67g2P1bEHgi6zgOjGUL4LvhE9Dgc");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getAudience(), is(hasSize(1)));
@@ -150,15 +147,15 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetEmptyListAudienceIfMissing() throws Exception {
+    public void shouldGetEmptyListAudienceIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getAudience(), IsEmptyCollection.<String>empty());
+        assertThat(jwt.getAudience(), IsEmptyCollection.<String>empty());
     }
 
     @Test
-    public void shouldDeserializeDatesUsingLong() throws Exception {
+    public void shouldDeserializeDatesUsingLong() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjIxNDc0OTM2NDcsIm5iZiI6MjE0NzQ5MzY0NywiZXhwIjoyMTQ3NDkzNjQ3LCJjdG0iOjIxNDc0OTM2NDd9.txmUJ0UCy2pqTFrEgj49eNDQCWUSW_XRMjMaRqcrgLg");
         assertThat(jwt, is(notNullValue()));
 
@@ -171,7 +168,7 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetExpirationTime() throws Exception {
+    public void shouldGetExpirationTime() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJleHAiOiIxNDc2NzI3MDg2In0.XwZztHlQwnAgmnQvrcWXJloLOUaLZGiY0HOXJCKRaks");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getExpiresAt(), is(instanceOf(Date.class)));
@@ -182,15 +179,15 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetNullExpirationTimeIfMissing() throws Exception {
+    public void shouldGetNullExpirationTimeIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getExpiresAt(), is(nullValue()));
+        assertThat(jwt.getExpiresAt(), is(nullValue()));
     }
 
     @Test
-    public void shouldGetNotBefore() throws Exception {
+    public void shouldGetNotBefore() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJuYmYiOiIxNDc2NzI3MDg2In0.pi3Fi3oFiXk5A5AetDdL0hjVx_rt6F5r_YiG6HoCYDw");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getNotBefore(), is(instanceOf(Date.class)));
@@ -201,15 +198,15 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetNullNotBeforeIfMissing() throws Exception {
+    public void shouldGetNullNotBeforeIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getNotBefore(), is(nullValue()));
+        assertThat(jwt.getNotBefore(), is(nullValue()));
     }
 
     @Test
-    public void shouldGetIssuedAt() throws Exception {
+    public void shouldGetIssuedAt() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOiIxNDc2NzI3MDg2In0.u6BxwrO7S0sqDY8-1cUOLzU2uejAJBzQQF8g_o5BAgo");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getIssuedAt(), is(instanceOf(Date.class)));
@@ -220,104 +217,105 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetNullIssuedAtIfMissing() throws Exception {
+    public void shouldGetNullIssuedAtIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getIssuedAt(), is(nullValue()));
+        assertThat(jwt.getIssuedAt(), is(nullValue()));
     }
 
     @Test
-    public void shouldGetId() throws Exception {
+    public void shouldGetId() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjM0NTY3ODkwIn0.m3zgEfVUFOd-CvL3xG5BuOWLzb0zMQZCqiVNQQOPOvA");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getId(), is("1234567890"));
     }
 
     @Test
-    public void shouldGetNullIdIfMissing() throws Exception {
+    public void shouldGetNullIdIfMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.something");
         assertThat(jwt, is(notNullValue()));
 
-        Assert.assertThat(jwt.getId(), is(nullValue()));
+        assertThat(jwt.getId(), is(nullValue()));
     }
 
     @Test
-    public void shouldNotBeDeemedExpiredWithoutDateClaims() throws Exception {
+    public void shouldNotBeDeemedExpiredWithoutDateClaims() {
         JWT jwt = customTimeJWT(null, null);
         assertThat(jwt.isExpired(0), is(false));
     }
 
     @Test
-    public void shouldNotBeDeemedExpired() throws Exception {
+    public void shouldNotBeDeemedExpired() {
         JWT jwt = customTimeJWT(null, new Date().getTime() + 2000);
         assertThat(jwt.isExpired(0), is(false));
     }
 
     @Test
-    public void shouldBeDeemedExpired() throws Exception {
+    public void shouldBeDeemedExpired() {
         JWT jwt = customTimeJWT(null, new Date().getTime() - 2000);
         assertThat(jwt.isExpired(0), is(true));
     }
 
     @Test
-    public void shouldNotBeDeemedExpiredByLeeway() throws Exception {
+    public void shouldNotBeDeemedExpiredByLeeway() {
         JWT jwt = customTimeJWT(null, new Date().getTime() - 1000);
         assertThat(jwt.isExpired(2), is(false));
     }
 
     @Test
-    public void shouldBeDeemedExpiredByLeeway() throws Exception {
+    public void shouldBeDeemedExpiredByLeeway() {
         JWT jwt = customTimeJWT(null, new Date().getTime() - 2000);
         assertThat(jwt.isExpired(1), is(true));
     }
 
     @Test
-    public void shouldNotBeDeemedFutureIssued() throws Exception {
+    public void shouldNotBeDeemedFutureIssued() {
         JWT jwt = customTimeJWT(new Date().getTime() - 2000, null);
         assertThat(jwt.isExpired(0), is(false));
     }
 
     @Test
-    public void shouldBeDeemedFutureIssued() throws Exception {
+    public void shouldBeDeemedFutureIssued() {
         JWT jwt = customTimeJWT(new Date().getTime() + 2000, null);
         assertThat(jwt.isExpired(0), is(true));
     }
 
     @Test
-    public void shouldNotBeDeemedFutureIssuedByLeeway() throws Exception {
+    public void shouldNotBeDeemedFutureIssuedByLeeway() {
         JWT jwt = customTimeJWT(new Date().getTime() + 1000, null);
         assertThat(jwt.isExpired(2), is(false));
     }
 
     @Test
-    public void shouldBeDeemedFutureIssuedByLeeway() throws Exception {
+    public void shouldBeDeemedFutureIssuedByLeeway() {
         JWT jwt = customTimeJWT(new Date().getTime() + 2000, null);
         assertThat(jwt.isExpired(1), is(true));
     }
 
     @Test
-    public void shouldBeDeemedNotTimeValid() throws Exception {
+    public void shouldBeDeemedNotTimeValid() {
         JWT jwt = customTimeJWT(new Date().getTime() + 1000, new Date().getTime() - 1000);
         assertThat(jwt.isExpired(0), is(true));
     }
 
     @Test
-    public void shouldBeDeemedTimeValid() throws Exception {
+    public void shouldBeDeemedTimeValid() {
         JWT jwt = customTimeJWT(new Date().getTime() - 1000, new Date().getTime() + 1000);
         assertThat(jwt.isExpired(0), is(false));
     }
 
     @Test
-    public void shouldThrowIfLeewayIsNegative() throws Exception {
+    public void shouldThrowIfLeewayIsNegative() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("The leeway must be a positive value.");
         JWT jwt = customTimeJWT(null, null);
         jwt.isExpired(-1);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
-    public void shouldNotRemoveKnownPublicClaimsFromTree() throws Exception {
+    public void shouldNotRemoveKnownPublicClaimsFromTree() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoMCIsInN1YiI6ImVtYWlscyIsImF1ZCI6InVzZXJzIiwiaWF0IjoxMDEwMTAxMCwiZXhwIjoxMTExMTExMSwibmJmIjoxMDEwMTAxMSwianRpIjoiaWRpZCIsInJvbGVzIjoiYWRtaW4ifQ.jCchxb-mdMTq5EpeVMSQyTp6zSwByKnfl9U-Zc9kg_w");
 
         assertThat(jwt, is(notNullValue()));
@@ -343,7 +341,7 @@ public class JWTTest {
     //Private Claims
 
     @Test
-    public void shouldGetBaseClaimIfClaimIsMissing() throws Exception {
+    public void shouldGetBaseClaimIfClaimIsMissing() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.K17vlwhE8FCMShdl1_65jEYqsQqBOVMPUU9IgG-QlTM");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getClaim("notExisting"), is(notNullValue()));
@@ -352,7 +350,7 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetClaim() throws Exception {
+    public void shouldGetClaim() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifX0.lrU1gZlOdlmTTeZwq0VI-pZx2iV46UWYd5-lCjy6-c4");
         assertThat(jwt, is(notNullValue()));
         assertThat(jwt.getClaim("object"), is(notNullValue()));
@@ -360,7 +358,7 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetAllClaims() throws Exception {
+    public void shouldGetAllClaims() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJvYmplY3QiOnsibmFtZSI6ImpvaG4ifSwic3ViIjoiYXV0aDAifQ.U20MgOAV81c54mRelwYDJiLllb5OVwUAtMGn-eUOpTA");
         assertThat(jwt, is(notNullValue()));
         Map<String, Claim> claims = jwt.getClaims();
@@ -374,7 +372,7 @@ public class JWTTest {
     }
 
     @Test
-    public void shouldGetEmptyAllClaims() throws Exception {
+    public void shouldGetEmptyAllClaims() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo");
         assertThat(jwt, is(notNullValue()));
         Map<String, Claim> claims = jwt.getClaims();
@@ -384,8 +382,9 @@ public class JWTTest {
 
     //Parcelable
 
+    @SuppressWarnings("ConstantConditions")
     @Test
-    public void shouldBeParceled() throws Exception {
+    public void shouldBeParceled() {
         JWT jwtOrigin = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.K17vlwhE8FCMShdl1_65jEYqsQqBOVMPUU9IgG-QlTM");
         assertThat(jwtOrigin, is(notNullValue()));
 
@@ -437,12 +436,7 @@ public class JWTTest {
 
     private String encodeString(String source) {
         byte[] bytes = Base64.encode(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
-        String res = "";
-        try {
-            res = new String(bytes, CHARSET_UTF_8);
-        } catch (UnsupportedEncodingException ignored) {
-        }
-        return res;
+        return new String(bytes, Charset.defaultCharset());
     }
 
 }
