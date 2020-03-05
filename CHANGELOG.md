@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.0.0](https://github.com/auth0/jwtdecode.android/tree/2.0.0) (2020-03-05)
+This major stops using Support Library and migrates to AndroidX dependencies.
+[Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.4.0...2.0.0)
+
+**Changed**
+- Update dependencies and use AndroidX [\#44](https://github.com/auth0/JWTDecode.Android/pull/44) ([SUPERCILEX](https://github.com/SUPERCILEX))
+
 ## [1.4.0](https://github.com/auth0/jwtdecode.android/tree/1.4.0) (2019-10-28)
 [Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.3.0...1.4.0)
 
