@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.0.1](https://github.com/auth0/jwtdecode.android/tree/2.0.1) (2021-11-08)
+[Full Changelog](https://github.com/auth0/jwtdecode.android/compare/2.0.0...2.0.1)
+
+**Security**
+- Bump GSON dependency to 2.8.9 [\#61](https://github.com/auth0/JWTDecode.Android/pull/61) ([evansims](https://github.com/evansims))
+
 ## [2.0.0](https://github.com/auth0/jwtdecode.android/tree/2.0.0) (2020-03-05)
 This major stops using Support Library and migrates to AndroidX dependencies.
 [Full Changelog](https://github.com/auth0/jwtdecode.android/compare/1.4.0...2.0.0)
