@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@3
+
 jobs:
   build:
     environment:
@@ -23,7 +27,4 @@ jobs:
             - ~/.android
             - /usr/local/android-sdk-linux/extras
 
-    - run:
-          name: Upload Coverage
-          when: on_success
-          command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
+    - codecov/upload
