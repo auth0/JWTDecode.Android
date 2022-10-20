@@ -22,7 +22,7 @@ The library is be available both in Maven Central and JCenter. To start using it
 implementation 'com.auth0.android:jwtdecode:2.0.1'
 ```
 
-## Next Steps
+### Usage
 
 Decode a JWT token
 
