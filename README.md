@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/auth0/JWTDecode.android/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/JWTDecode.android)
 [![javadoc](https://javadoc.io/badge2/com.auth0.android/jwtdecode/javadoc.svg)](https://javadoc.io/doc/com.auth0.android/jwtdecode)
 
-📚 [Documentation](#documentation) • 🚀 [Getting Started](#getting-started) • ⏭️ [Next Steps](#next-steps) • 💬 [Feedback](#feedback)
+📚 [Documentation](#documentation) • 🚀 [Getting Started](#getting-started) • 💬 [Feedback](#feedback)
 
 ## Documentation
 
