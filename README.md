@@ -49,7 +49,7 @@ Checkout [EXAMPLES](https://github.com/auth0/JWTDecode.Android/blob/master/EXAMP
 We appreciate feedback and contribution to this repo! Before you get started, please see the following:
 
 - [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
-- [Auth0's code of conduct guidelines](https://github.com/auth0/JWTDecode.Android/blob/main/CODE-OF-CONDUCT.md)
+- [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
 ### Raise an issue
 To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/JWTDecode.Android/issues).
