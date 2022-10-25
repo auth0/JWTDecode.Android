@@ -1,4 +1,4 @@
-# JWTDecode.Android
+![JWTDecode.Android](https://cdn.auth0.com/website/sdks/banners/jwtdecode-android-banner.png)
 
 [![CircleCI](https://img.shields.io/circleci/project/github/auth0/JWTDecode.Android.svg?style=flat-square)](https://circleci.com/gh/auth0/JWTDecode.Android/tree/master)
 [![Maven Central](https://img.shields.io/maven-central/v/com.auth0.android/jwtdecode.svg?style=flat-square)](https://search.maven.org/artifact/com.auth0.android/jwtdecode)
