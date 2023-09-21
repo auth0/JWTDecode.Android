@@ -1,0 +1,34 @@
+name: Configure CI
+description: Performs the initial configuration of the CI environment
+
+inputs:
+  java:
+    description: The Java version to use
+    required: false
+    default: 8.0.382-tem
+  gradle:
+    description: The Gradle version to use
+    required: false
+    default: 6.7.1
+  kotlin:
+    description: The Kotlin version to use
+    required: false
+    default: 1.6.21
+
+runs:
+  using: composite
+
+  steps:
+    - run: |
+        curl -s "https://get.sdkman.io" | bash
+        source "/home/runner/.sdkman/bin/sdkman-init.sh"
+        sdk list java
+        sdk install java ${{ inputs.java }} && sdk default java ${{ inputs.java }}
+        sdk install gradle ${{ inputs.gradle }} && sdk default gradle ${{ inputs.gradle }}
+        sdk install kotlin ${{ inputs.kotlin }} && sdk default kotlin ${{ inputs.kotlin }}
+      shell: bash
+
+    - run: ./gradlew androidDependencies
+      shell: bash
+
+    - uses: gradle/wrapper-validation-action@56b90f209b02bf6d1deae490e9ef18b21a389cd4 # pin@1.1.0
