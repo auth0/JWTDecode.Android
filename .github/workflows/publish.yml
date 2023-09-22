@@ -1,0 +1,32 @@
+name: Publish Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: The branch to release from.
+        required: true
+        default: master
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to Maven Central
+    runs-on: ubuntu-latest
+    environment: release
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.branch }}
+
+      - uses: ./.github/actions/setup
+
+      - run: ./gradlew clean assemble -PisSnapshot=false
+
+      - run: ./gradlew exportVersion -PisSnapshot=false
+
+      - run: ./gradlew publishAndroidLibraryPublicationToMavenRepository -PossrhUsername="${{ secrets.OSSR_USERNAME }}" -PossrhPassword="${{ secrets.OSSR_PASSWORD }}" -PsigningKey="${{ secrets.SIGNING_KEY }}" -PsigningPassword="${{ secrets.SIGNING_PASSWORD }}" -PisSnapshot=false"
