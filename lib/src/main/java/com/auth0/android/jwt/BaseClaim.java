@@ -1,10 +1,11 @@
 package com.auth0.android.jwt;
 
 import androidx.annotation.Nullable;
-import java.lang.reflect.Array;
-import java.util.Collections;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Date;
-import java.util.List;
 
 /**
  * The BaseClaim class is a Claim implementation that returns null when any of it's methods it's called.
@@ -47,18 +48,13 @@ class BaseClaim implements Claim {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T[] asArray(Class<T> tClazz) throws DecodeException {
-        return (T[]) Array.newInstance(tClazz, 0);
-    }
-
-    @Override
-    public <T> List<T> asList(Class<T> tClazz) throws DecodeException {
-        return Collections.emptyList();
+    public JSONArray asArray() {
+        return null;
     }
 
     @Nullable
     @Override
-    public <T> T asObject(Class<T> tClazz) throws DecodeException {
+    public JSONObject asObject() {
         return null;
     }
 }

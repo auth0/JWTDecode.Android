@@ -35,7 +35,6 @@ android {
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'com.google.code.gson:gson:2.8.9'
 
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.hamcrest:java-hamcrest:2.0.0.0'
@@ -44,6 +43,7 @@ dependencies {
         exclude group: 'com.google.auto.service', module: 'auto-service'
     }
     testImplementation 'org.mockito:mockito-core:3.2.4'
+    testImplementation project(':jwtdecode')
 }
 
 tasks.withType(Test) {

@@ -1,6 +1,10 @@
 package com.auth0.android.jwt;
 
 import androidx.annotation.Nullable;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.List;
 
@@ -69,26 +73,16 @@ public interface Claim {
      * If the value isn't an Array, an empty Array will be returned.
      *
      * @return the value as an Array or an empty Array.
-     * @throws DecodeException if the values inside the Array can't be converted to a class T.
      */
-    <T> T[] asArray(Class<T> tClazz) throws DecodeException;
-
-    /**
-     * Get this Claim as a List of type T.
-     * If the value isn't an Array, an empty List will be returned.
-     *
-     * @return the value as a List or an empty List.
-     * @throws DecodeException if the values inside the List can't be converted to a class T.
-     */
-    <T> List<T> asList(Class<T> tClazz) throws DecodeException;
+    @Nullable
+    JSONArray asArray();
 
     /**
      * Get this Claim as a Object of type T.
      * If the value isn't of type Object, null will be returned.
      *
-     * @return the value as a Object of type T or null.
-     * @throws DecodeException if the value can't be converted to a class T.
+     * @return the value as a Object of type T or null..
      */
     @Nullable
-    <T> T asObject(Class<T> tClazz) throws DecodeException;
+    JSONObject asObject();
 }

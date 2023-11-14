@@ -1,14 +1,11 @@
 package com.auth0.android.jwt;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNull.nullValue;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsArrayWithSize.emptyArray;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.hamcrest.core.IsNull.nullValue;
 
 public class BaseClaimTest {
 
@@ -51,18 +48,11 @@ public class BaseClaimTest {
 
     @Test
     public void shouldGetAsArray() {
-        assertThat(claim.asArray(Object.class), is(notNullValue()));
-        assertThat(claim.asArray(Object.class), is(emptyArray()));
-    }
-
-    @Test
-    public void shouldGetAsList() {
-        assertThat(claim.asList(Object.class), is(notNullValue()));
-        assertThat(claim.asList(Object.class), is(empty()));
+        assertThat(claim.asArray(), is(nullValue()));
     }
 
     @Test
     public void shouldGetAsObject() {
-        assertThat(claim.asObject(Object.class), is(nullValue()));
+        assertThat(claim.asObject(), is(nullValue()));
     }
 }

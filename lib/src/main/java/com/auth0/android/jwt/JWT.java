@@ -7,11 +7,6 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
@@ -208,10 +203,8 @@ public class JWT implements Parcelable {
 
     private void decode(String token) {
         final String[] parts = splitToken(token);
-        Type mapType = new TypeToken<Map<String, String>>() {
-        }.getType();
-        header = parseJson(base64Decode(parts[0]), mapType);
-        payload = parseJson(base64Decode(parts[1]), JWTPayload.class);
+        header = decoder.decodeHeader(base64Decode(parts[0]));
+        payload = decoder.decodePayload(base64Decode(parts[1]));
         signature = parts[2];
     }
 
@@ -239,19 +232,5 @@ public class JWT implements Parcelable {
         return decoded;
     }
 
-    private <T> T parseJson(String json, Type typeOfT) {
-        T payload;
-        try {
-            payload = getGson().fromJson(json, typeOfT);
-        } catch (Exception e) {
-            throw new DecodeException("The token's payload had an invalid JSON format.", e);
-        }
-        return payload;
-    }
-
-    static Gson getGson() {
-        return new GsonBuilder()
-                .registerTypeAdapter(JWTPayload.class, new JWTDeserializer())
-                .create();
-    }
+    private static JWTDecoder decoder = new JWTDecoder();
 }
