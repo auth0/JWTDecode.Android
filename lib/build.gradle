@@ -4,6 +4,9 @@ plugins {
 
 logger.lifecycle("Using version ${version} for ${name}")
 
+def signingKey = findProperty('signingKey')
+def signingKeyPwd = findProperty('signingPassword')
+
 oss {
     name 'jwtdecode'
     repository 'jwtdecode.android'
@@ -22,9 +25,6 @@ oss {
         }
     }
 }
-
-def signingKey = findProperty('signingKey')
-def signingKeyPwd = findProperty('signingPassword')
 
 signing {
     useInMemoryPgpKeys(signingKey, signingKeyPwd)
