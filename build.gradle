@@ -14,13 +14,6 @@ plugins {
     id 'lifecycle-base'
 }
 
-def signingKey = findProperty('signingKey')
-def signingKeyPwd = findProperty('signingPassword')
-
-signing {
-    useInMemoryPgpKeys(signingKey, signingKeyPwd)
-}
-
 allprojects {
     group = 'com.auth0.android'
 
