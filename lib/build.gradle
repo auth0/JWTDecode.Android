@@ -1,5 +1,5 @@
 plugins {
-    id "com.auth0.gradle.oss-library.android"
+    id "com.auth0.gradle.oss-library.android" version "0.18.0"
 }
 
 logger.lifecycle("Using version ${version} for ${name}")
