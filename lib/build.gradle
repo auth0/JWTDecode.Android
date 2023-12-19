@@ -1,14 +1,18 @@
 plugins {
-    id "com.auth0.gradle.oss-library.android" version "0.17.1"
+    id "com.auth0.gradle.oss-library.android" version "0.18.0"
 }
 
 logger.lifecycle("Using version ${version} for ${name}")
+
+def signingKey = findProperty('signingKey')
+def signingKeyPwd = findProperty('signingPassword')
 
 oss {
     name 'jwtdecode'
     repository 'jwtdecode.android'
     organization 'auth0'
     description 'JWT Decoding library for Android'
+    skipAssertSigningConfiguration true
 
     developers {
         auth0 {
@@ -20,6 +24,10 @@ oss {
             email = 'luciano.balmaceda@auth0.com'
         }
     }
+}
+
+signing {
+    useInMemoryPgpKeys(signingKey, signingKeyPwd)
 }
 
 android {
