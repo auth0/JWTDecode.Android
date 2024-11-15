@@ -33,4 +33,4 @@ jobs:
 
       - run: ./gradlew clean test jacocoTestReport --console=plain
 
-      - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
+      - uses: codecov/codecov-action@968872560f81e7bdde9272853e65f2507c0eca7c # pin@5.0.0
