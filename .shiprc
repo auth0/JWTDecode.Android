@@ -1,0 +1,8 @@
+{
+  "files": {
+    "README.md": [],
+    ".version": [],
+    "build.gradle": ["version = \"{MAJOR}.{MINOR}.{PATCH}\""]
+  },
+  "prefixVersion": false
+}
