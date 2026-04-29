@@ -1,6 +1,8 @@
 name: SCA
 
 on:
+  push:
+    branches: ["master"]
   pull_request:
     branches: ["master"]
   workflow_dispatch:
@@ -8,4 +10,6 @@ on:
 jobs:
   snyk-cli:
     uses: auth0/devsecops-tooling/.github/workflows/sca-scan.yml@main
+    with:
+      java-version: "8"
     secrets: inherit
