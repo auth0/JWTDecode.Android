@@ -50,3 +50,14 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
 }
+
+afterEvaluate {
+    publishing.publications.all {
+        pom.withXml {
+            def licenseNode = asNode().getAt('licenses')[0]?.getAt('license')[0]
+            if (licenseNode) {
+                licenseNode.getAt('url')[0].setValue('https://spdx.org/licenses/MIT.html')
+            }
+        }
+    }
+}
