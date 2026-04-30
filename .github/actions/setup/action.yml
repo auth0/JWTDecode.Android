@@ -5,7 +5,7 @@ inputs:
   java:
     description: The Java version to use
     required: false
-    default: 8.0.382-tem
+    default: 11
   gradle:
     description: The Gradle version to use
     required: false
@@ -19,11 +19,14 @@ runs:
   using: composite
 
   steps:
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: ${{ inputs.java }}
+
     - run: |
         curl -s "https://get.sdkman.io" | bash
-        source "/home/runner/.sdkman/bin/sdkman-init.sh"
-        sdk list java
-        sdk install java ${{ inputs.java }} && sdk default java ${{ inputs.java }}
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
         sdk install gradle ${{ inputs.gradle }} && sdk default gradle ${{ inputs.gradle }}
         sdk install kotlin ${{ inputs.kotlin }} && sdk default kotlin ${{ inputs.kotlin }}
       shell: bash
