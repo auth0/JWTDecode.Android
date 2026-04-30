@@ -1,0 +1,11 @@
+name: SCA
+
+on:
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  snyk-cli:
+    uses: auth0/devsecops-tooling/.github/workflows/sca-scan.yml@main
+    secrets: inherit
