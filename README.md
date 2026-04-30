@@ -9,6 +9,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.auth0.android/jwtdecode.svg?style=flat-square)](https://search.maven.org/artifact/com.auth0.android/jwtdecode)
 [![codecov](https://codecov.io/gh/auth0/JWTDecode.android/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/JWTDecode.android)
 [![javadoc](https://javadoc.io/badge2/com.auth0.android/jwtdecode/javadoc.svg)](https://javadoc.io/doc/com.auth0.android/jwtdecode)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/auth0/JWTDecode.Android)
 
 📚 [Documentation](#documentation) • 🚀 [Getting Started](#getting-started) • 💬 [Feedback](#feedback)
 
