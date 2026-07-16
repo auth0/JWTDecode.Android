@@ -24,11 +24,14 @@ runs:
         distribution: temurin
         java-version: ${{ inputs.java }}
 
-    - run: |
+    - env:
+        GRADLE: ${{ inputs.gradle }}
+        KOTLIN: ${{ inputs.kotlin }}
+      run: |
         curl -s "https://get.sdkman.io" | bash
         source "$HOME/.sdkman/bin/sdkman-init.sh"
-        sdk install gradle ${{ inputs.gradle }} && sdk default gradle ${{ inputs.gradle }}
-        sdk install kotlin ${{ inputs.kotlin }} && sdk default kotlin ${{ inputs.kotlin }}
+        sdk install gradle "$GRADLE" && sdk default gradle "$GRADLE"
+        sdk install kotlin "$KOTLIN" && sdk default kotlin "$KOTLIN"
       shell: bash
 
     - run: ./gradlew androidDependencies

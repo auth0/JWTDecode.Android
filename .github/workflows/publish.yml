@@ -29,4 +29,9 @@ jobs:
 
       - run: ./gradlew exportVersion -PisSnapshot=false
 
-      - run: ./gradlew publishAndroidLibraryPublicationToMavenRepository -PossrhUsername="${{ secrets.OSSR_USERNAME }}" -PossrhPassword="${{ secrets.OSSR_PASSWORD }}" -PsigningKey="${{ secrets.SIGNING_KEY }}" -PsigningPassword="${{ secrets.SIGNING_PASSWORD }}" -PisSnapshot=false"
+      - env:
+          OSSR_USERNAME: ${{ secrets.OSSR_USERNAME }}
+          OSSR_PASSWORD: ${{ secrets.OSSR_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publishAndroidLibraryPublicationToMavenRepository -PossrhUsername="$OSSR_USERNAME" -PossrhPassword="$OSSR_PASSWORD" -PsigningKey="$SIGNING_KEY" -PsigningPassword="$SIGNING_PASSWORD" -PisSnapshot=false
