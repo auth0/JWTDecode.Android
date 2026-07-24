@@ -1,0 +1,40 @@
+name: Publish release to Java
+
+inputs:
+  java-version:
+    required: true
+  ossr-username:
+    required: true
+  ossr-token:
+    required: true
+  signing-key:
+    required: true
+  signing-password:
+    required: true
+
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # pin@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ inputs.java-version }}
+        cache: 'gradle'
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # pin@v5
+
+    - name: Publish Android/Java Packages to Maven
+      shell: bash
+      run: ./gradlew publishToSonatype closeSonatypeStagingRepository -PisSnapshot=false --stacktrace
+      env:
+        MAVEN_USERNAME: ${{ inputs.ossr-username }}
+        MAVEN_PASSWORD: ${{ inputs.ossr-token }}
+        SIGNING_KEY: ${{ inputs.signing-key}}
+        SIGNING_PASSWORD: ${{ inputs.signing-password}}

@@ -1,0 +1,50 @@
+apply plugin: 'jacoco'
+
+android {
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                jacoco.excludes = ['jdk.internal.*']
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    def jacocoTestReportTask = tasks.findByName("jacocoTestReport")
+    if (!jacocoTestReportTask) {
+        jacocoTestReportTask = tasks.create("jacocoTestReport")
+        jacocoTestReportTask.group = "Reporting"
+        jacocoTestReportTask.description = "Generate Jacoco coverage reports for all builds."
+    }
+
+    android.libraryVariants.all { variant ->
+        def name = variant.name
+        def testTaskName = "test${name.capitalize()}UnitTest"
+
+        def reportTask = tasks.create(name: "jacocoTest${name.capitalize()}UnitTestReport", type: JacocoReport, dependsOn: testTaskName) {
+            group = "Reporting"
+            description = "Generate Jacoco coverage reports for the ${name.capitalize()} build."
+
+            classDirectories.from = fileTree(
+                    dir: "${buildDir}/intermediates/javac/${name}",
+                    excludes: ['**/R.class',
+                               '**/R$*.class',
+                               '**/*$ViewInjector*.*',
+                               '**/*$ViewBinder*.*',
+                               '**/BuildConfig.*',
+                               '**/Manifest*.*']
+            )
+
+            sourceDirectories.from = ['src/main/java'].plus(android.sourceSets[name].java.srcDirs)
+            executionData.from = "${buildDir}/jacoco/${testTaskName}.exec"
+
+            reports {
+                xml.required = true
+                html.required = true
+            }
+        }
+        jacocoTestReportTask.dependsOn reportTask
+    }
+}

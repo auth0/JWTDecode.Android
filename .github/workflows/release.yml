@@ -1,0 +1,23 @@
+name: Create GitHub Release
+
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/java-release.yml
+    with:
+      java-version: '11'
+    secrets:
+      ossr-username: ${{ secrets.OSSR_USERNAME }}
+      ossr-token: ${{ secrets.OSSR_TOKEN }}
+      signing-key: ${{ secrets.SIGNING_KEY }}
+      signing-password: ${{ secrets.SIGNING_PASSWORD }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
