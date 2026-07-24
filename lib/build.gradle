@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'jacoco'
 }
 
 apply from: rootProject.file('gradle/versioning.gradle')
@@ -33,9 +32,5 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.2.4'
 }
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
-
+apply from: rootProject.file('gradle/jacoco.gradle')
 apply from: rootProject.file('gradle/maven-publish.gradle')
