@@ -3,8 +3,6 @@ name: Create a GitHub release
 #
 # Creates a GitHub release with the given version.
 #
-# TODO: Remove once the common repo is public.
-#
 
 inputs:
   token:

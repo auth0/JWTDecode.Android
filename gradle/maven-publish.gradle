@@ -91,9 +91,6 @@ publishing {
 signing {
     def signingKey = System.getenv("SIGNING_KEY")
     def signingPassword = System.getenv("SIGNING_PASSWORD")
-    // Snapshots don't need to be signed; releases always do. This also lets a
-    // credentials-only snapshot rehearsal run before GPG keys are configured.
-    required { !isSnapshot() && gradle.taskGraph.hasTask("publishToSonatype") }
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications
 }

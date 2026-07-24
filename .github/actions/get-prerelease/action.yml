@@ -3,8 +3,6 @@ name: Return a boolean indicating if the version contains prerelease identifiers
 #
 # Returns a simple true/false boolean indicating whether the version indicates it's a prerelease or not.
 #
-# TODO: Remove once the common repo is public.
-#
 
 inputs:
   version:

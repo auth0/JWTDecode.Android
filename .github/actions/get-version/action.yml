@@ -3,8 +3,6 @@ name: Return the version extracted from the branch name
 #
 # Returns the version from the .version file.
 #
-# TODO: Remove once the common repo is public.
-#
 
 outputs:
   version:
