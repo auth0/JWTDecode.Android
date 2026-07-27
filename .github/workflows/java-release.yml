@@ -65,10 +65,10 @@ jobs:
       - uses: ./.github/actions/maven-publish
         with:
           java-version: ${{ inputs.java-version }}
-          ossr-username: ${{ secrets.OSSR_USERNAME }}
-          ossr-token: ${{ secrets.OSSR_TOKEN }}
-          signing-key: ${{ secrets.SIGNING_KEY }}
-          signing-password: ${{ secrets.SIGNING_PASSWORD }}
+          ossr-username: ${{ secrets.ossr-username }}
+          ossr-token: ${{ secrets.ossr-token }}
+          signing-key: ${{ secrets.signing-key }}
+          signing-password: ${{ secrets.signing-password }}
 
       # Create a release for the tag
       - uses: ./.github/actions/release-create
