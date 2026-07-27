@@ -19,6 +19,7 @@ apply plugin: 'io.github.gradle-nexus.publish-plugin'
 nexusPublishing {
     repositories {
         sonatype {
+            stagingProfileId.set(MAVEN_GROUP_ID)
             nexusUrl.set(uri('https://ossrh-staging-api.central.sonatype.com/service/local/'))
             username.set(System.getenv("MAVEN_USERNAME"))
             password.set(System.getenv("MAVEN_PASSWORD"))
