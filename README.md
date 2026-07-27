@@ -25,7 +25,7 @@
 The library is be available both in Maven Central and JCenter. To start using it add this line to your `build.gradle` dependencies file:
 
 ```groovy
-implementation 'com.auth0.android:jwtdecode:2.0.2'
+implementation 'com.auth0.android:jwtdecode:2.0.3'
 ```
 
 ### Usage
