@@ -1,0 +1,19 @@
+name: Return the version extracted from the branch name
+
+#
+# Returns the version from the .version file.
+#
+
+outputs:
+  version:
+    value: ${{ steps.get_version.outputs.VERSION }}
+
+runs:
+  using: composite
+
+  steps:
+    - id: get_version
+      shell: bash
+      run: |
+        VERSION=$(head -1 .version)
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT

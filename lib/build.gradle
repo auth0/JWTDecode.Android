@@ -1,26 +1,12 @@
 plugins {
-    id "com.auth0.gradle.oss-library.android" version "0.17.1"
+    id 'com.android.library'
 }
+
+apply from: rootProject.file('gradle/versioning.gradle')
+
+version = getVersionFromFile()
 
 logger.lifecycle("Using version ${version} for ${name}")
-
-oss {
-    name 'jwtdecode'
-    repository 'jwtdecode.android'
-    organization 'auth0'
-    description 'JWT Decoding library for Android'
-
-    developers {
-        auth0 {
-            displayName = 'Auth0'
-            email = 'oss@auth0.com'
-        }
-        lbalmaceda {
-            displayName = 'Luciano Balmaceda'
-            email = 'luciano.balmaceda@auth0.com'
-        }
-    }
-}
 
 android {
     compileSdkVersion 29
@@ -29,7 +15,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName project.version
     }
 }
 
@@ -46,18 +32,5 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.2.4'
 }
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
-
-afterEvaluate {
-    publishing.publications.all {
-        pom.withXml {
-            def licenseNode = asNode().getAt('licenses')[0]?.getAt('license')[0]
-            if (licenseNode) {
-                licenseNode.getAt('url')[0].setValue('https://spdx.org/licenses/MIT.html')
-            }
-        }
-    }
-}
+apply from: rootProject.file('gradle/jacoco.gradle')
+apply from: rootProject.file('gradle/maven-publish.gradle')

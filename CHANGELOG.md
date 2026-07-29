@@ -1,5 +1,17 @@
 # Change Log
 
+## [2.0.4](https://github.com/auth0/JWTDecode.Android/tree/2.0.4) (2026-07-28)
+[Full Changelog](https://github.com/auth0/JWTDecode.Android/compare/2.0.3...2.0.4)
+
+**Fixed**
+- fix: use SPDX license URL in published POM  [\#118](https://github.com/auth0/JWTDecode.Android/pull/118) ([utkrishtsahu](https://github.com/utkrishtsahu))
+
+## [2.0.3](https://github.com/auth0/JWTDecode.Android/tree/2.0.3) (2026-07-27)
+[Full Changelog](https://github.com/auth0/JWTDecode.Android/compare/2.0.2...2.0.3)
+
+**Added**
+- Fix/spdx license url [\#107](https://github.com/auth0/JWTDecode.Android/pull/107) ([utkrishtsahu](https://github.com/utkrishtsahu))
+
 ## [2.0.2](https://github.com/auth0/jwtdecode.android/tree/2.0.2) (2023-01-11)
 [Full Changelog](https://github.com/auth0/jwtdecode.android/compare/2.0.1...2.0.2)
 

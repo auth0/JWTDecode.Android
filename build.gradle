@@ -2,7 +2,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
@@ -12,6 +11,20 @@ buildscript {
 
 plugins {
     id 'lifecycle-base'
+    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+}
+
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId.set(MAVEN_GROUP_ID)
+            nexusUrl.set(uri('https://ossrh-staging-api.central.sonatype.com/service/local/'))
+            username.set(System.getenv("MAVEN_USERNAME"))
+            password.set(System.getenv("MAVEN_PASSWORD"))
+        }
+    }
 }
 
 allprojects {
@@ -20,7 +33,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 }
 
