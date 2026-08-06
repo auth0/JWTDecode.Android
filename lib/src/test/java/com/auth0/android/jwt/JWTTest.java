@@ -313,6 +313,38 @@ public class JWTTest {
         jwt.isExpired(-1);
     }
 
+    @Test
+    public void shouldNotExpireInIntervalWhenExpClaimIsMissing() {
+        JWT jwt = customTimeJWT(null, null);
+        assertThat(jwt.expiresIn(60), is(false));
+    }
+
+    @Test
+    public void shouldNotExpireInIntervalWhenExpiryIsBeyondInterval() {
+        JWT jwt = customTimeJWT(null, new Date().getTime() + 5000);
+        assertThat(jwt.expiresIn(2), is(false));
+    }
+
+    @Test
+    public void shouldExpireInIntervalWhenExpiryIsWithinInterval() {
+        JWT jwt = customTimeJWT(null, new Date().getTime() + 2000);
+        assertThat(jwt.expiresIn(5), is(true));
+    }
+
+    @Test
+    public void shouldExpireInIntervalWhenAlreadyExpired() {
+        JWT jwt = customTimeJWT(null, new Date().getTime() - 2000);
+        assertThat(jwt.expiresIn(0), is(true));
+    }
+
+    @Test
+    public void shouldThrowIfExpiresInSecondsIsNegative() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("The seconds must be a positive value.");
+        JWT jwt = customTimeJWT(null, new Date().getTime() + 2000);
+        jwt.expiresIn(-1);
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     public void shouldNotRemoveKnownPublicClaimsFromTree() {
