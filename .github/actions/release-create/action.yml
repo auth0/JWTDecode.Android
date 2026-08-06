@@ -31,7 +31,7 @@ runs:
   using: composite
 
   steps:
-    - uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+    - uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # pin@v1
       with:
         body: ${{ inputs.body }}
         name: ${{ inputs.name }}
