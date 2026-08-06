@@ -10,6 +10,7 @@
     - [Issued At ("iat")](#issued-at-iat)
     - [JWT ID ("jti")](#jwt-id-jti)
   - [Time Validation](#time-validation)
+  - [Header Claims](#header-claims)
   - [Private Claims](#private-claims)
   - [Claim Class](#claim-class)
     - [Primitives](#primitives)
@@ -90,6 +91,24 @@ You can also check whether the token will expire within a given interval from no
 boolean expiringSoon = jwt.expiresIn(60); // true if the token expires within the next 60 seconds
 ```
 
+
+## Header Claims
+
+Header parameters can be read as `Claim`s, which support any JSON value type allowed by the JOSE spec (RFC 7515) — strings such as `alg` and `kid`, arrays such as the `x5c` certificate chain, and nested objects such as `jwk`. If the parameter can't be found, a `BaseClaim` is returned.
+
+```java
+String alg = jwt.getHeaderClaim("alg").asString();
+List<String> x5c = jwt.getHeaderClaim("x5c").asList(String.class);
+```
+
+You can also obtain all the header claims at once by calling `getHeaderClaims`.
+
+```java
+Map<String, Claim> headerClaims = jwt.getHeaderClaims();
+```
+
+> **Note**
+> The older `getHeader()` method (which returns a `Map<String, String>`) is deprecated. It still works and returns structured values as their JSON text, but `getHeaderClaim` should be preferred for reading non-string header parameters.
 
 ## Private Claims
 
