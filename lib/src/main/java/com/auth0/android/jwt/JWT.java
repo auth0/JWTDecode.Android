@@ -171,6 +171,27 @@ public class JWT implements Parcelable {
     }
 
     /**
+     * Validates whether this JWT will expire within the given number of seconds from now.
+     * Useful when the app wants to refresh the token before its expiration time.
+     *
+     * @param seconds the interval in seconds from now to check the expiration against. Must be a positive value.
+     * @return true if the token expires within the given interval, or false otherwise. If the "exp" claim is missing, returns false.
+     */
+    public boolean expiresIn(long seconds) {
+        if (seconds < 0) {
+            throw new IllegalArgumentException("The seconds must be a positive value.");
+        }
+
+        if (payload.exp == null) {
+            return false;
+        }
+
+        long todayTime = (long) (Math.floor(new Date().getTime() / 1000) * 1000);
+        Date futureDate = new Date(todayTime + seconds * 1000);
+        return !futureDate.before(payload.exp);
+    }
+
+    /**
      * Returns the String representation of this JWT.
      *
      * @return the String Token.

@@ -39,6 +39,7 @@ JWT jwt = new JWT(token);
 String issuer = jwt.getIssuer(); //get registered claims
 String claim = jwt.getClaim("isAdmin").asString(); //get custom claims
 boolean isExpired = jwt.isExpired(10); // Do time validation with 10 seconds leeway
+boolean expiringSoon = jwt.expiresIn(60); // true if the token expires within the next 60 seconds
 ```
 
 A `DecodeException` will raise with a detailed message if the token has:

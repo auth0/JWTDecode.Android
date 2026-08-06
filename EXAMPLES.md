@@ -84,6 +84,12 @@ The JWT token may include DateNumber fields that can be used to validate that th
 boolean isExpired = jwt.isExpired(10); // 10 seconds leeway
 ```
 
+You can also check whether the token will expire within a given interval from now. This is useful when the app wants to proactively refresh the token before it expires. If the `"exp"` claim is missing, this returns `false`.
+
+```java
+boolean expiringSoon = jwt.expiresIn(60); // true if the token expires within the next 60 seconds
+```
+
 
 ## Private Claims
 
