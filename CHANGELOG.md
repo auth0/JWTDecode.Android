@@ -1,5 +1,17 @@
 # Change Log
 
+## [2.1.0](https://github.com/auth0/JWTDecode.Android/tree/2.1.0) (2026-08-07)
+[Full Changelog](https://github.com/auth0/JWTDecode.Android/compare/2.0.4...2.1.0)
+
+**Added**
+- feat: Added expiresIn support for the token [\#126](https://github.com/auth0/JWTDecode.Android/pull/126) ([pmathew92](https://github.com/pmathew92))
+
+**Changed**
+- refactor: Updated the gradle build versions [\#124](https://github.com/auth0/JWTDecode.Android/pull/124) ([pmathew92](https://github.com/pmathew92))
+
+**Fixed**
+- Fix:  SDK not parsing headers with claims other than String [\#127](https://github.com/auth0/JWTDecode.Android/pull/127) ([pmathew92](https://github.com/pmathew92))
+
 ## [2.0.4](https://github.com/auth0/JWTDecode.Android/tree/2.0.4) (2026-07-28)
 [Full Changelog](https://github.com/auth0/JWTDecode.Android/compare/2.0.3...2.0.4)
 
