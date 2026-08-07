@@ -269,18 +269,16 @@ public class JWT implements Parcelable {
     }
 
     private void parseHeader(String json) {
-        final JsonObject object;
+        final JsonElement element;
         try {
-            JsonElement element = getGson().fromJson(json, JsonElement.class);
-            if (element == null || !element.isJsonObject()) {
-                throw new DecodeException("The token's header had an invalid JSON format.");
-            }
-            object = element.getAsJsonObject();
-        } catch (DecodeException e) {
-            throw e;
+            element = new Gson().fromJson(json, JsonElement.class);
         } catch (Exception e) {
             throw new DecodeException("The token's header had an invalid JSON format.", e);
         }
+        if (element == null || !element.isJsonObject()) {
+            throw new DecodeException("The token's header had an invalid JSON format.");
+        }
+        final JsonObject object = element.getAsJsonObject();
 
         Map<String, String> stringHeader = new HashMap<>();
         Map<String, Claim> tree = new HashMap<>();
@@ -289,11 +287,16 @@ public class JWT implements Parcelable {
             tree.put(entry.getKey(), new ClaimImpl(value));
             stringHeader.put(entry.getKey(), stringifyHeaderValue(value));
         }
-        header = Collections.unmodifiableMap(stringHeader);
+        //Kept mutable to preserve the behaviour of the Map that Gson used to return.
+        header = stringHeader;
         headerTree = Collections.unmodifiableMap(tree);
     }
 
+    @Nullable
     private String stringifyHeaderValue(JsonElement value) {
+        if (value.isJsonNull()) {
+            return null;
+        }
         if (value.isJsonPrimitive()) {
             return value.getAsString();
         }

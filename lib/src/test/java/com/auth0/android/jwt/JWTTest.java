@@ -143,11 +143,46 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldGetNullLegacyHeaderValueForJsonNull() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"HS256\",\"kid\":null}");
+        assertThat(jwt, is(notNullValue()));
+        // A JSON null must stay an actual null, not the literal String "null".
+        assertThat(jwt.getHeader().containsKey("kid"), is(true));
+        assertThat(jwt.getHeader().get("kid"), is(nullValue()));
+        assertThat(jwt.getHeaderClaim("kid").asString(), is(nullValue()));
+    }
+
+    @Test
+    public void shouldReturnMutableLegacyHeader() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"HS256\"}");
+        assertThat(jwt, is(notNullValue()));
+        // The legacy Map was mutable before this change; keep it that way.
+        jwt.getHeader().put("custom", "value");
+        assertThat(jwt.getHeader(), is(hasEntry("custom", "value")));
+    }
+
+    @Test
     public void shouldThrowIfHeaderHasInvalidJSONFormat() {
         exception.expect(DecodeException.class);
         exception.expectMessage("The token's header had an invalid JSON format.");
         // header decodes to the non-JSON-object string "notJson"
         new JWT(String.format("%s.e30.sig", encodeString("notJson")));
+    }
+
+    @Test
+    public void shouldThrowIfHeaderIsMalformedJSON() {
+        exception.expect(DecodeException.class);
+        exception.expectMessage("The token's header had an invalid JSON format.");
+        // header decodes to malformed JSON, which makes the parser itself throw
+        new JWT(String.format("%s.e30.sig", encodeString("{\"alg\":")));
+    }
+
+    @Test
+    public void shouldThrowIfHeaderIsEmpty() {
+        exception.expect(DecodeException.class);
+        exception.expectMessage("The token's header had an invalid JSON format.");
+        // an empty header parses to a null JsonElement
+        new JWT(String.format("%s.e30.sig", encodeString("")));
     }
 
     @Test
