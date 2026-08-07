@@ -85,6 +85,107 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldGetHeaderClaimAsArray() {
+        // header: {"alg":"RS256","x5c":["MIICert1","MIICert2"]}
+        JWT jwt = jwtWithHeader("{\"alg\":\"RS256\",\"x5c\":[\"MIICert1\",\"MIICert2\"]}");
+        assertThat(jwt, is(notNullValue()));
+        assertThat(jwt.getHeaderClaim("x5c"), is(instanceOf(ClaimImpl.class)));
+        assertThat(jwt.getHeaderClaim("x5c").asList(String.class), is(hasSize(2)));
+        assertThat(jwt.getHeaderClaim("x5c").asList(String.class), is(hasItems("MIICert1", "MIICert2")));
+    }
+
+    @Test
+    public void shouldGetHeaderClaimAsObject() {
+        // header: {"alg":"RS256","jwk":{"kty":"RSA","kid":"abc"}}
+        JWT jwt = jwtWithHeader("{\"alg\":\"RS256\",\"jwk\":{\"kty\":\"RSA\",\"kid\":\"abc\"}}");
+        assertThat(jwt, is(notNullValue()));
+        @SuppressWarnings("unchecked")
+        Map<String, String> jwk = jwt.getHeaderClaim("jwk").asObject(Map.class);
+        assertThat(jwk, is(notNullValue()));
+        assertThat(jwk, is(hasEntry("kty", "RSA")));
+        assertThat(jwk, is(hasEntry("kid", "abc")));
+    }
+
+    @Test
+    public void shouldGetHeaderClaimAsString() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"HS256\",\"typ\":\"JWT\"}");
+        assertThat(jwt, is(notNullValue()));
+        assertThat(jwt.getHeaderClaim("alg").asString(), is("HS256"));
+        assertThat(jwt.getHeaderClaim("typ").asString(), is("JWT"));
+    }
+
+    @Test
+    public void shouldGetBaseClaimIfHeaderClaimIsMissing() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"HS256\"}");
+        assertThat(jwt, is(notNullValue()));
+        assertThat(jwt.getHeaderClaim("notExisting"), is(notNullValue()));
+        assertThat(jwt.getHeaderClaim("notExisting"), is(not(instanceOf(ClaimImpl.class))));
+        assertThat(jwt.getHeaderClaim("notExisting"), is(instanceOf(BaseClaim.class)));
+    }
+
+    @Test
+    public void shouldGetAllHeaderClaims() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"RS256\",\"x5c\":[\"MIICert1\"]}");
+        assertThat(jwt, is(notNullValue()));
+        Map<String, Claim> claims = jwt.getHeaderClaims();
+        assertThat(claims, is(notNullValue()));
+        assertThat(claims.get("alg").asString(), is("RS256"));
+        assertThat(claims.get("x5c").asList(String.class), is(hasItems("MIICert1")));
+    }
+
+    @Test
+    public void shouldGetLegacyHeaderStringForStructuredValue() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"RS256\",\"x5c\":[\"MIICert1\",\"MIICert2\"]}");
+        assertThat(jwt, is(notNullValue()));
+        // Legacy Map<String,String> must not throw on structured values; returns the JSON text.
+        assertThat(jwt.getHeader(), is(hasEntry("alg", "RS256")));
+        assertThat(jwt.getHeader(), is(hasEntry("x5c", "[\"MIICert1\",\"MIICert2\"]")));
+    }
+
+    @Test
+    public void shouldGetNullLegacyHeaderValueForJsonNull() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"HS256\",\"kid\":null}");
+        assertThat(jwt, is(notNullValue()));
+        // A JSON null must stay an actual null, not the literal String "null".
+        assertThat(jwt.getHeader().containsKey("kid"), is(true));
+        assertThat(jwt.getHeader().get("kid"), is(nullValue()));
+        assertThat(jwt.getHeaderClaim("kid").asString(), is(nullValue()));
+    }
+
+    @Test
+    public void shouldReturnMutableLegacyHeader() {
+        JWT jwt = jwtWithHeader("{\"alg\":\"HS256\"}");
+        assertThat(jwt, is(notNullValue()));
+        // The legacy Map was mutable before this change; keep it that way.
+        jwt.getHeader().put("custom", "value");
+        assertThat(jwt.getHeader(), is(hasEntry("custom", "value")));
+    }
+
+    @Test
+    public void shouldThrowIfHeaderHasInvalidJSONFormat() {
+        exception.expect(DecodeException.class);
+        exception.expectMessage("The token's header had an invalid JSON format.");
+        // header decodes to the non-JSON-object string "notJson"
+        new JWT(String.format("%s.e30.sig", encodeString("notJson")));
+    }
+
+    @Test
+    public void shouldThrowIfHeaderIsMalformedJSON() {
+        exception.expect(DecodeException.class);
+        exception.expectMessage("The token's header had an invalid JSON format.");
+        // header decodes to malformed JSON, which makes the parser itself throw
+        new JWT(String.format("%s.e30.sig", encodeString("{\"alg\":")));
+    }
+
+    @Test
+    public void shouldThrowIfHeaderIsEmpty() {
+        exception.expect(DecodeException.class);
+        exception.expectMessage("The token's header had an invalid JSON format.");
+        // an empty header parses to a null JsonElement
+        new JWT(String.format("%s.e30.sig", encodeString("")));
+    }
+
+    @Test
     public void shouldGetSignature() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ");
         assertThat(jwt, is(notNullValue()));
@@ -462,6 +563,19 @@ public class JWTTest {
         }
         bodyBuilder.append("}");
         String body = encodeString(bodyBuilder.toString());
+        String signature = "sign";
+        return new JWT(String.format("%s.%s.%s", header, body, signature));
+    }
+
+    /**
+     * Creates a new JWT with a custom header JSON, an empty payload and a dummy signature.
+     *
+     * @param headerJson the raw JSON to use as the token header.
+     * @return a JWT
+     */
+    private JWT jwtWithHeader(String headerJson) {
+        String header = encodeString(headerJson);
+        String body = encodeString("{}");
         String signature = "sign";
         return new JWT(String.format("%s.%s.%s", header, body, signature));
     }

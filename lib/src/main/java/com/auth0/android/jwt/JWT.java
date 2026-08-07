@@ -9,11 +9,14 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +30,8 @@ public class JWT implements Parcelable {
     private final String token;
 
     private Map<String, String> header;
+
+    private Map<String, Claim> headerTree;
     private JWTPayload payload;
     private String signature;
 
@@ -43,12 +48,41 @@ public class JWT implements Parcelable {
 
     /**
      * Get the Header values from this JWT as a Map of Strings.
+     * <p>
+     * Structured header parameters (e.g. the "x5c" certificate chain array or a nested
+     * "jwk" object) are returned as their JSON text representation. To read header
+     * parameters as typed values, prefer {@link #getHeaderClaim(String)}.
      *
      * @return the Header values of the JWT.
+     * @deprecated Use {@link #getHeaderClaim(String)} or {@link #getHeaderClaims()} instead,
+     * which support non-string header parameters such as "x5c" and "jwk".
      */
+    @Deprecated
     @NonNull
     public Map<String, String> getHeader() {
         return header;
+    }
+
+    /**
+     * Get a header Claim given its name. If the Claim wasn't specified in the JWT header, a BaseClaim will be returned.
+     *
+     * @param name the name of the header Claim to retrieve.
+     * @return a valid Claim.
+     */
+    @NonNull
+    public Claim getHeaderClaim(@NonNull String name) {
+        final Claim claim = headerTree.get(name);
+        return claim != null ? claim : new BaseClaim();
+    }
+
+    /**
+     * Get all the header Claims.
+     *
+     * @return a valid Map of header Claims.
+     */
+    @NonNull
+    public Map<String, Claim> getHeaderClaims() {
+        return headerTree;
     }
 
     /**
@@ -229,11 +263,44 @@ public class JWT implements Parcelable {
 
     private void decode(String token) {
         final String[] parts = splitToken(token);
-        Type mapType = new TypeToken<Map<String, String>>() {
-        }.getType();
-        header = parseJson(base64Decode(parts[0]), mapType);
+        parseHeader(base64Decode(parts[0]));
         payload = parseJson(base64Decode(parts[1]), JWTPayload.class);
         signature = parts[2];
+    }
+
+    private void parseHeader(String json) {
+        final JsonElement element;
+        try {
+            element = new Gson().fromJson(json, JsonElement.class);
+        } catch (Exception e) {
+            throw new DecodeException("The token's header had an invalid JSON format.", e);
+        }
+        if (element == null || !element.isJsonObject()) {
+            throw new DecodeException("The token's header had an invalid JSON format.");
+        }
+        final JsonObject object = element.getAsJsonObject();
+
+        Map<String, String> stringHeader = new HashMap<>();
+        Map<String, Claim> tree = new HashMap<>();
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+            JsonElement value = entry.getValue();
+            tree.put(entry.getKey(), new ClaimImpl(value));
+            stringHeader.put(entry.getKey(), stringifyHeaderValue(value));
+        }
+        //Kept mutable to preserve the behaviour of the Map that Gson used to return.
+        header = stringHeader;
+        headerTree = Collections.unmodifiableMap(tree);
+    }
+
+    @Nullable
+    private String stringifyHeaderValue(JsonElement value) {
+        if (value.isJsonNull()) {
+            return null;
+        }
+        if (value.isJsonPrimitive()) {
+            return value.getAsString();
+        }
+        return value.toString();
     }
 
     private String[] splitToken(String token) {
