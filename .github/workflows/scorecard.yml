@@ -50,7 +50,7 @@ jobs:
           persist-credentials: false   # required by Scorecard — do not remove
 
       - name: Run analysis
-        uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a # v2.4.3
+        uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
         with:
           results_file: results.sarif
           results_format: sarif
@@ -74,7 +74,7 @@ jobs:
       # token can write. (github.event.pull_request is null on push/schedule, so !…fork is true.)
       - name: Upload to code-scanning
         if: ${{ !github.event.pull_request.head.repo.fork }}
-        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4.37.0
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           sarif_file: results.sarif
           category: scorecard
