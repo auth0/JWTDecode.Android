@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +74,7 @@ class ClaimImpl extends BaseClaim {
         if (!value.isJsonPrimitive()) {
             return null;
         }
-        long ms = Long.parseLong(value.getAsString()) * 1000;
+        long ms = new BigDecimal(value.getAsString()).movePointRight(3).longValue();
         return new Date(ms);
     }
 

@@ -269,6 +269,18 @@ public class JWTTest {
     }
 
     @Test
+    public void shouldDeserializeFractionalNumericDates() {
+        String payload = "{\"exp\":1476727086.125,\"nbf\":1476727086.125,\"iat\":1476727086.125,\"ctm\":1476727086.125}";
+        JWT jwt = new JWT(String.format("%s.%s.sig", encodeString("{\"alg\":\"none\"}"), encodeString(payload)));
+
+        Date expectedDate = new Date(1476727086125L);
+        assertThat(jwt.getExpiresAt(), is(expectedDate));
+        assertThat(jwt.getNotBefore(), is(expectedDate));
+        assertThat(jwt.getIssuedAt(), is(expectedDate));
+        assertThat(jwt.getClaim("ctm").asDate(), is(expectedDate));
+    }
+
+    @Test
     public void shouldGetExpirationTime() {
         JWT jwt = new JWT("eyJhbGciOiJIUzI1NiJ9.eyJleHAiOiIxNDc2NzI3MDg2In0.XwZztHlQwnAgmnQvrcWXJloLOUaLZGiY0HOXJCKRaks");
         assertThat(jwt, is(notNullValue()));

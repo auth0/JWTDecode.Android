@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -64,7 +65,7 @@ class JWTDeserializer implements JsonDeserializer<JWTPayload> {
         if (!obj.has(claimName)) {
             return null;
         }
-        long ms = obj.get(claimName).getAsLong() * 1000;
+        long ms = new BigDecimal(obj.get(claimName).getAsString()).movePointRight(3).longValue();
         return new Date(ms);
     }
 
